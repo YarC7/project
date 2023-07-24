@@ -7,6 +7,16 @@ const CustomerDAO = {
     const customer = await Models.Customer.findOne(query);
     return customer;
   },
+  async selectByEmail(email) {
+    // const query = { email: email };
+    const customer = await Models.Customer.findOne({email});
+    return customer;
+  },
+  async selectByToken(token) {
+    // const query = { email: email };
+    const customer = await Models.Customer.findOne({ token });
+    return customer;
+  },
   async insert(customer) {
     const mongoose = require('mongoose');
     customer._id = new mongoose.Types.ObjectId();

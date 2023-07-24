@@ -24,6 +24,23 @@ const EmailUtil = {
         resolve(true);
       });
     });
+  },
+  reset(email,resetLink){
+    return new Promise(function (resolve, reject) {
+      const resetOptions = {
+        from: MyConstants.EMAIL_USER,
+        to: email,
+        subject: 'Reset Password Link',
+        html: `<p>You requested for reset password kindly use this <a href="${resetLink}">${resetLink}</a></p>`,
+      };
+      transporter.sendMail(resetOptions, function (err, result) {
+        if (err) {
+          reject(err); // If there's an error, reject the promise with the error.
+        } else {
+          resolve(true); // If the email is sent successfully, resolve the promise with 'true'.
+        }
+      }); 
+    });
   }
 };
 module.exports = EmailUtil;

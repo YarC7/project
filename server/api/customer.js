@@ -121,4 +121,76 @@ router.get('/orders/customer/:cid', JwtUtil.checkToken, async function (req, res
   const orders = await OrderDAO.selectByCustID(_cid);
   res.json(orders);
 });
+
+
+//neww
+
+router.post('/forgot', async function (req, res) {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: 'You must enter an email address.' });
+    }
+
+    const existingUser = await CustomerDAO.selectByEmail(email);
+
+    if (!existingUser) {
+      return res.status(400).json({ error: 'No user found for this email address.' });
+    }
+
+    const token = crypto.randomBytes(20).toString('hex');
+
+    existingUser.token = token;
+
+    await existingUser.save(); // Use await here to ensure the save operation completes before proceeding.
+
+    const resetLink = `http://localhost:3000/api/customer/reset/${token}`;
+    await EmailUtil.reset(existingUser.email, resetLink);
+
+    res.status(200).json({
+      success: true,
+      message: 'Please check your email for the link to reset your password.'
+    });
+  } catch (error) {
+    console.error('Error:', error); // Log the error message for debugging purposes
+    res.status(500).json({
+      error: 'An error occurred while processing your request. Please try again later.'
+    });
+  }
+});
+
+
+router.post('/reset/:token', async (req, res) => {
+  const token = req.params.token;
+  try {
+    const { password } = req.body;
+
+    if (!password) {
+      return res.status(400).json({ error: 'You must enter a password.' });
+    }
+
+    const resetUser = await CustomerDAO.selectByToken(token); // Pass the token directly
+
+    if (!resetUser) {
+      return res.status(400).json({
+        error: 'Your token has expired. Please attempt to reset your password again.'
+      });
+    }
+
+    resetUser.password = password;
+
+    await resetUser.save(); // Use 'await' to ensure the save operation completes before proceeding.
+
+    res.status(200).json({
+      success: true,
+      message: 'Password changed successfully. Please login with your new password.'
+    });
+  } catch (error) {
+    console.error('Error:', error); // Log the error for debugging purposes
+    res.status(400).json({
+      error: 'Your request could not be processed. Please try again.'
+    });
+  }
+});
 module.exports = router;
