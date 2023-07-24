@@ -1,35 +1,63 @@
-import axios from 'axios';
-import React, { Component } from 'react';
-import MyContext from '../contexts/MyContext';
+import React, { Component } from "react";
+import { TextField, Button, Typography } from "@mui/material";
+import MyContext from "../contexts/MyContext";
+import axios from "axios";
 
 class Login extends Component {
   static contextType = MyContext; // using this.context to access global state
   constructor(props) {
     super(props);
     this.state = {
-      txtUsername: '',
-      txtPassword: ''
+      txtUsername: "",
+      txtPassword: "",
     };
   }
+
   render() {
-    if (this.context.token === '') {
+    if (this.context.token === "") {
       return (
         <div className="align-valign-center">
-          <h2 className="text-center">ADMIN LOGIN</h2>
+          <Typography variant="h4" component="h2" align="center">
+            ADMIN LOGIN
+          </Typography>
           <form>
             <table className="align-center">
               <tbody>
                 <tr>
                   <td>Username</td>
-                  <td><input type="text" value={this.state.txtUsername} onChange={(e) => { this.setState({ txtUsername: e.target.value }) }} /></td>
+                  <td>
+                    <TextField
+                      type="text"
+                      value={this.state.txtUsername}
+                      onChange={(e) => {
+                        this.setState({ txtUsername: e.target.value });
+                      }}
+                    />
+                  </td>
                 </tr>
                 <tr>
                   <td>Password</td>
-                  <td><input type="password" value={this.state.txtPassword} onChange={(e) => { this.setState({ txtPassword: e.target.value }) }} /></td>
+                  <td>
+                    <TextField
+                      type="password"
+                      value={this.state.txtPassword}
+                      onChange={(e) => {
+                        this.setState({ txtPassword: e.target.value });
+                      }}
+                    />
+                  </td>
                 </tr>
                 <tr>
                   <td></td>
-                  <td><input type="submit" value="LOGIN" onClick={(e) => this.btnLoginClick(e)} /></td>
+                  <td>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={(e) => this.btnLoginClick(e)}
+                    >
+                      LOGIN
+                    </Button>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -37,9 +65,9 @@ class Login extends Component {
         </div>
       );
     }
-    return (<div />);
+    return <div />;
   }
-  // event-handlers
+
   btnLoginClick(e) {
     e.preventDefault();
     const username = this.state.txtUsername;
@@ -48,12 +76,12 @@ class Login extends Component {
       const account = { username: username, password: password };
       this.apiLogin(account);
     } else {
-      alert('Please input username and password');
+      alert("Please input username and password");
     }
   }
-  // apis
+
   apiLogin(account) {
-    axios.post('/api/admin/login', account).then((res) => {
+    axios.post("/api/admin/login", account).then((res) => {
       const result = res.data;
       if (result.success === true) {
         this.context.setToken(result.token);
@@ -64,4 +92,5 @@ class Login extends Component {
     });
   }
 }
+
 export default Login;

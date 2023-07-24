@@ -1,86 +1,137 @@
-import axios from 'axios';
-import React, { Component } from 'react';
-import MyContext from '../contexts/MyContext';
-import ProductDetail from './ProductDetailComponent';
+import axios from "axios";
+import React, { Component } from "react";
+import MyContext from "../contexts/MyContext";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  Box,
+  Pagination,
+  PaginationItem,
+} from "@mui/material";
+import ProductDetail from "./ProductDetailComponent";
 
 class Product extends Component {
-  static contextType = MyContext; // using this.context to access global state
-  constructor(props) {
-    super(props);
-    this.state = {
-      products: [],
-      noPages: 0,
-      curPage: 1,
-      itemSelected: null
-    };
-  }
-  render() {
-    const prods = this.state.products.map((item) => {
-      return (
-        <tr key={item._id} className="datatable" onClick={() => this.trItemClick(item)}>
-          <td>{item._id}</td>
-          <td>{item.name}</td>
-          <td>{item.price}</td>
-          <td>{new Date(item.cdate).toLocaleString()}</td>
-          <td>{item.category.name}</td>
-          <td><img src={"data:image/jpg;base64," + item.image} width="100px" height="100px" alt="" /></td>
-        </tr>
-      );
-    });
-    const pagination = Array.from({ length: this.state.noPages }, (_, index) => {
-      if ((index + 1) === this.state.curPage) {
-        return (<span key={index}>| <b>{index + 1}</b> |</span>);
-      } else {
-        return (<span key={index} className="link" onClick={() => this.lnkPageClick(index + 1)}>| {index + 1} |</span>);
-      }
-    });
-    return (
-      <div>
-        <div className="float-left">
-          <h2 className="text-center">PRODUCT LIST</h2>
-          <table className="datatable" border="1">
-            <tbody>
-              <tr className="datatable">
-                <th>ID</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Creation date</th>
-                <th>Category</th>
-                <th>Image</th>
-              </tr>
-              {prods}
-              <tr>
-                <td colSpan="6">{pagination}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div className="inline" />
-        <ProductDetail item={this.state.itemSelected} curPage={this.state.curPage} updateProducts={this.updateProducts} />
-        <div className="float-clear" />
-      </div>
-    );
-  }
-  updateProducts = (products, noPages) => { // arrow-function
-    this.setState({ products: products, noPages: noPages });
-  }
+  static contextType = MyContext;
+
+  state = {
+    products: [],
+    noPages: 0,
+    curPage: 1,
+    itemSelected: null,
+  };
+
   componentDidMount() {
     this.apiGetProducts(this.state.curPage);
   }
-  // event-handlers
-  lnkPageClick(index) {
-    this.apiGetProducts(index);
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.curPage !== this.state.curPage) {
+      this.apiGetProducts(this.state.curPage);
+    }
   }
+
+  render() {
+    const { products, noPages, curPage, itemSelected } = this.state;
+    const prods = products.map((item) => (
+      <TableRow
+        key={item._id}
+        className="datatable"
+        onClick={() => this.trItemClick(item)}
+      >
+        <TableCell>{item._id}</TableCell>
+        <TableCell>{item.name}</TableCell>
+        <TableCell>{item.price}</TableCell>
+        <TableCell>{new Date(item.cdate).toLocaleString()}</TableCell>
+        <TableCell>{item.category.name}</TableCell>
+        <TableCell>
+          <img
+            src={"data:image/jpg;base64," + item.image}
+            width="100px"
+            height="100px"
+            alt=""
+          />
+        </TableCell>
+      </TableRow>
+    ));
+
+    const pagination = Array.from({ length: noPages }, (_, index) => (
+      <PaginationItem
+        key={index}
+        active={index + 1 === curPage}
+        onClick={() => this.lnkPageClick(index + 1)}
+      >
+        {index + 1}
+      </PaginationItem>
+    ));
+
+    return (
+      <Box>
+        <Box className="float-left">
+          <Typography variant="h4" component="h2" align="center">
+            PRODUCT LIST
+          </Typography>
+          <TableContainer>
+            <Table className="datatable" border="1">
+              <TableHead>
+                <TableRow className="datatable">
+                  <TableCell>ID</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Price</TableCell>
+                  <TableCell>Creation date</TableCell>
+                  <TableCell>Category</TableCell>
+                  <TableCell>Image</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>{prods}</TableBody>
+            </Table>
+            <Box display="flex" justifyContent="center" mt={2}>
+              <Pagination
+                count={noPages}
+                page={curPage}
+                onChange={(_, value) => this.lnkPageClick(value)}
+              />
+            </Box>
+          </TableContainer>
+        </Box>
+        <div className="inline" />
+        <ProductDetail
+          item={itemSelected}
+          curPage={curPage}
+          updateProducts={this.updateProducts}
+        />
+        <Box className="float-clear" />
+      </Box>
+    );
+  }
+
+  updateProducts = (products, noPages) => {
+    this.setState({ products, noPages });
+  };
+
+  lnkPageClick(index) {
+    this.setState({ curPage: index });
+  }
+
   trItemClick(item) {
     this.setState({ itemSelected: item });
   }
-  // apis
+
   apiGetProducts(page) {
-    const config = { headers: { 'x-access-token': this.context.token } };
-    axios.get('/api/admin/products?page=' + page, config).then((res) => {
+    const config = { headers: { "x-access-token": this.context.token } };
+    axios.get("/api/admin/products?page=" + page, config).then((res) => {
       const result = res.data;
-      this.setState({ products: result.products, noPages: result.noPages, curPage: result.curPage });
+      this.setState({
+        products: result.products,
+        noPages: result.noPages,
+        curPage: result.curPage,
+      });
     });
   }
 }
+
 export default Product;
