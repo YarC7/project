@@ -7,6 +7,10 @@ const CustomerDAO = {
     const customer = await Models.Customer.findOne(query);
     return customer;
   },
+  async selectByUsername(username) {
+    const customer = await Models.Customer.findOne({ username });
+    return customer;
+  },
   async selectByEmail(email) {
     // const query = { email: email };
     const customer = await Models.Customer.findOne({email});

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcryptjs');
 // utils
 const CryptoUtil = require('../utils/CryptoUtil');
 const EmailUtil = require('../utils/EmailUtil');
@@ -22,7 +23,9 @@ router.post('/signup', async function (req, res) {
   } else {
     const now = new Date().getTime(); // milliseconds
     const token = CryptoUtil.md5(now.toString());
-    const newCust = { username: username, password: password, name: name, phone: phone, email: email, active: 0, token: token };
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
+    const newCust = { username: username, password: hash, name: name, phone: phone, email: email, active: 0, token: token };
     const result = await CustomerDAO.insert(newCust);
     if (result) {
       const send = await EmailUtil.send(email, result._id, token);
@@ -45,14 +48,24 @@ router.post('/active', async function (req, res) {
 router.post('/login', async function (req, res) {
   const username = req.body.username;
   const password = req.body.password;
-  if (username && password) {
-    const customer = await CustomerDAO.selectByUsernameAndPassword(username, password);
+
+  if (username) {
+    const customer = await CustomerDAO.selectByUsername(username);
     if (customer) {
-      if (customer.active === 1) {
-        const token = JwtUtil.genToken();
-        res.json({ success: true, message: 'Authentication successful', token: token, customer: customer });
+      const isMatch = await bcrypt.compare(password, customer.password);
+
+      if (isMatch) {
+        if (customer.active === 1) {
+          const token = JwtUtil.genToken();
+          res.json({ success: true, message: 'Authentication successful', token: token, customer: customer });
+        } else {
+          res.json({ success: false, message: 'Account is deactivated' });
+        }
       } else {
-        res.json({ success: false, message: 'Account is deactive' });
+        res.status(400).json({
+          success: false,
+          error: 'Password Incorrect'
+        });
       }
     } else {
       res.json({ success: false, message: 'Incorrect username or password' });
@@ -177,8 +190,9 @@ router.post('/reset/:token', async (req, res) => {
         error: 'Your token has expired. Please attempt to reset your password again.'
       });
     }
-
-    resetUser.password = password;
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
+    resetUser.password = hash;
 
     await resetUser.save(); // Use 'await' to ensure the save operation completes before proceeding.
 
