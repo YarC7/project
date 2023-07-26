@@ -936,7 +936,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsonwebtoken@npm:^9.0.0":
+"jsonwebtoken@npm:^9.0.1":
   version: 9.0.1
   resolution: "jsonwebtoken@npm:9.0.1"
   dependencies:
@@ -1212,7 +1212,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongodb@npm:5.7.0, mongodb@npm:^5.5.0":
+"mongodb@npm:5.7.0, mongodb@npm:^5.7.0":
   version: 5.7.0
   resolution: "mongodb@npm:5.7.0"
   dependencies:
@@ -1244,7 +1244,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mongoose@npm:^7.1.1":
+"mongoose@npm:^7.4.1":
   version: 7.4.1
   resolution: "mongoose@npm:7.4.1"
   dependencies:
@@ -1347,7 +1347,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemailer@npm:^6.9.2":
+"nodemailer@npm:^6.9.4":
   version: 6.9.4
   resolution: "nodemailer@npm:6.9.4"
   checksum: 1a61039c9c6041ee9ed423c7fa3685cb300679f1ef8dcfd912fc58d9b8c429c34ac1187eebd4d86baf7158222f6e3a1ea2b4fd2a29630fb9ef0027cef46e90bb
@@ -1660,10 +1660,10 @@ __metadata:
     body-parser: ^1.20.2
     crypto: ^1.0.1
     express: ^4.18.2
-    jsonwebtoken: ^9.0.0
-    mongodb: ^5.5.0
-    mongoose: ^7.1.1
-    nodemailer: ^6.9.2
+    jsonwebtoken: ^9.0.1
+    mongodb: ^5.7.0
+    mongoose: ^7.4.1
+    nodemailer: ^6.9.4
   languageName: unknown
   linkType: soft
 

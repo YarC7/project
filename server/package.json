@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "(npm install) && (cd ../client-admin && npm install && npm run build) && (cd ../client-customer && npm install && npm run build)",
+    "build": "(yarn install) && (cd ../client-admin && yarn install && yarn build) && (cd ../client-customer && yarn install && yarn build)",
     "start": "node index.js"
   },
   "keywords": [],
@@ -15,10 +15,10 @@
     "body-parser": "^1.20.2",
     "crypto": "^1.0.1",
     "express": "^4.18.2",
-    "jsonwebtoken": "^9.0.0",
-    "mongodb": "^5.5.0",
-    "mongoose": "^7.1.1",
-    "nodemailer": "^6.9.2"
+    "jsonwebtoken": "^9.0.1",
+    "mongodb": "^5.7.0",
+    "mongoose": "^7.4.1",
+    "nodemailer": "^6.9.4"
   },
   "description": ""
 }
