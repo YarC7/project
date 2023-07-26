@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken');
-const MyConstants = require('./MyConstants');
+const jwt = require("jsonwebtoken");
+const MyConstants = require("./MyConstants");
 const JwtUtil = {
   genToken(username, password) {
     const token = jwt.sign(
@@ -10,13 +10,13 @@ const JwtUtil = {
     return token;
   },
   checkToken(req, res, next) {
-    const token = req.headers['x-access-token'] || req.headers['authorization'];
+    const token = req.headers["x-access-token"] || req.headers["authorization"];
     if (token) {
       jwt.verify(token, MyConstants.JWT_SECRET, (err, decoded) => {
         if (err) {
           return res.json({
             success: false,
-            message: 'Token is not valid'
+            message: "Token is not valid",
           });
         } else {
           req.decoded = decoded;
@@ -26,9 +26,9 @@ const JwtUtil = {
     } else {
       return res.json({
         success: false,
-        message: 'Auth token is not supplied'
+        message: "Auth token is not supplied",
       });
     }
-  }
+  },
 };
 module.exports = JwtUtil;
