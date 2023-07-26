@@ -65,7 +65,7 @@ class ProductDetail extends Component {
                     </TableRow>
                     <TableRow>
                       <TableCell>Price:</TableCell>
-                      <TableCell>{prod.price}</TableCell>
+                      <TableCell>{prod.price} VNĐ</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Category:</TableCell>

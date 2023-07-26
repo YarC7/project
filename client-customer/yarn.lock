@@ -5203,6 +5203,9 @@ __metadata:
     "@testing-library/react": ^13.4.0
     "@testing-library/user-event": ^13.5.0
     axios: ^1.4.0
+    eslint: ^8.45.0
+    eslint-config-react-app: ^7.0.1
+    eslint-plugin-react: ^7.33.0
     npm: ^9.6.7
     react: ^18.2.0
     react-dom: ^18.2.0
@@ -6687,7 +6690,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react@npm:^7.27.1":
+"eslint-plugin-react@npm:^7.27.1, eslint-plugin-react@npm:^7.33.0":
   version: 7.33.0
   resolution: "eslint-plugin-react@npm:7.33.0"
   dependencies:
@@ -6773,7 +6776,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.3.0":
+"eslint@npm:^8.3.0, eslint@npm:^8.45.0":
   version: 8.45.0
   resolution: "eslint@npm:8.45.0"
   dependencies:

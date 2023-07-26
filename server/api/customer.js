@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 // utils
 const CryptoUtil = require("../utils/CryptoUtil");
 const EmailUtil = require("../utils/EmailUtil");

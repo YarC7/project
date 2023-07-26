@@ -1,8 +1,17 @@
 import React, { Component } from "react";
-import { TextField, Button, Snackbar } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Snackbar,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+} from "@mui/material";
 import axios from "axios";
 import MyContext from "../contexts/MyContext";
 import withRouter from "../utils/withRouter";
+import ForgotPassword from "./ForgotPassword";
 
 class Login extends Component {
   static contextType = MyContext;
@@ -14,6 +23,7 @@ class Login extends Component {
       txtPassword: "",
       snackbarOpen: false,
       snackbarMessage: "",
+      showForgotPassword: false,
     };
   }
 
@@ -49,58 +59,84 @@ class Login extends Component {
     this.setState({ snackbarOpen: false });
   };
 
+  handleForgotPasswordClick = () => {
+    this.setState({ showForgotPassword: true });
+  };
+
+  handleForgotPasswordClose = () => {
+    this.setState({ showForgotPassword: false });
+  };
+
   render() {
     return (
       <div className="align-center">
-        <h2 className="text-center">CUSTOMER LOGIN</h2>
-        <form>
-          <table className="align-center">
-            <tbody>
-              <tr>
-                <td>Username</td>
-                <td>
-                  <TextField
-                    type="text"
-                    value={this.state.txtUsername}
-                    onChange={(e) => {
-                      this.setState({ txtUsername: e.target.value });
-                    }}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Password</td>
-                <td>
-                  <TextField
-                    type="password"
-                    value={this.state.txtPassword}
-                    onChange={(e) => {
-                      this.setState({ txtPassword: e.target.value });
-                    }}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={(e) => this.btnLoginClick(e)}
-                  >
-                    LOGIN
-                  </Button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </form>
-        <Snackbar
-          open={this.state.snackbarOpen}
-          autoHideDuration={3000}
-          onClose={this.handleSnackbarClose}
-          message={this.state.snackbarMessage}
-        />
+        {!this.state.showForgotPassword && (
+          <Card sx={{ maxWidth: 400, margin: "auto", marginTop: 10 }}>
+            <CardContent>
+              <Typography
+                variant="h4"
+                gutterBottom
+                style={{ textAlign: "center" }}
+              >
+                CUSTOMER LOGIN
+              </Typography>
+              <form onSubmit={(e) => this.btnLoginClick(e)}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label="Username"
+                      value={this.state.txtUsername}
+                      onChange={(e) => {
+                        this.setState({ txtUsername: e.target.value });
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label="Password"
+                      type="password"
+                      value={this.state.txtPassword}
+                      onChange={(e) => {
+                        this.setState({ txtPassword: e.target.value });
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                      type="submit"
+                    >
+                      LOGIN
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      fullWidth
+                      variant="outlined"
+                      color="primary"
+                      onClick={this.handleForgotPasswordClick}
+                    >
+                      FORGOT PASSWORD
+                    </Button>
+                  </Grid>
+                </Grid>
+              </form>
+              <Snackbar
+                open={this.state.snackbarOpen}
+                autoHideDuration={3000}
+                onClose={this.handleSnackbarClose}
+                message={this.state.snackbarMessage}
+              />
+            </CardContent>
+          </Card>
+        )}
+        {this.state.showForgotPassword && (
+          <ForgotPassword onClose={this.handleForgotPasswordClose} />
+        )}
       </div>
     );
   }

@@ -8,15 +8,9 @@ import {
   Card,
   CardMedia,
   CardContent,
+  CardActionArea,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import withRouter from "../utils/withRouter";
-
-const ProductCard = styled(Card)({
-  maxWidth: 345,
-  margin: "auto",
-  marginTop: 16,
-});
 
 class Product extends Component {
   constructor(props) {
@@ -28,25 +22,39 @@ class Product extends Component {
   render() {
     const prods = this.state.products.map((item) => {
       return (
-        <Grid item xs={12} sm={6} md={4} key={item._id}>
-          <ProductCard>
-            <Link to={"/product/" + item._id}>
+        <Grid
+          item
+          xs={12}
+          sm={6}
+          md={4}
+          lg={3}
+          key={item._id}
+          sx={{ display: "flex" }}
+        >
+          <Card sx={{ maxWidth: 345, height: "100%" }}>
+            <CardActionArea component={Link} to={"/product/" + item._id}>
               <CardMedia
                 component="img"
-                height="200"
+                height="300"
                 image={"data:image/jpg;base64," + item.image}
                 alt={item.name}
               />
-            </Link>
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                {item.name}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Price: {item.price}
-              </Typography>
-            </CardContent>
-          </ProductCard>
+              <CardContent
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography gutterBottom variant="h5" component="div">
+                  {item.name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Price: {item.price} VNĐ
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
         </Grid>
       );
     });

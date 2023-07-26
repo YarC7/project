@@ -11,7 +11,6 @@ import {
   Typography,
   Box,
   Pagination,
-  PaginationItem,
 } from "@mui/material";
 import ProductDetail from "./ProductDetailComponent";
 
@@ -57,16 +56,6 @@ class Product extends Component {
           />
         </TableCell>
       </TableRow>
-    ));
-
-    const pagination = Array.from({ length: noPages }, (_, index) => (
-      <PaginationItem
-        key={index}
-        active={index + 1 === curPage}
-        onClick={() => this.lnkPageClick(index + 1)}
-      >
-        {index + 1}
-      </PaginationItem>
     ));
 
     return (

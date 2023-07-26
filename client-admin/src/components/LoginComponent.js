@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { TextField, Button, Typography } from "@mui/material";
+import { TextField, Button, Typography, Grid, Card, Box } from "@mui/material";
 import MyContext from "../contexts/MyContext";
 import axios from "axios";
 
@@ -16,53 +16,57 @@ class Login extends Component {
   render() {
     if (this.context.token === "") {
       return (
-        <div className="align-valign-center">
-          <Typography variant="h4" component="h2" align="center">
-            ADMIN LOGIN
-          </Typography>
-          <form>
-            <table className="align-center">
-              <tbody>
-                <tr>
-                  <td>Username</td>
-                  <td>
-                    <TextField
-                      type="text"
-                      value={this.state.txtUsername}
-                      onChange={(e) => {
-                        this.setState({ txtUsername: e.target.value });
-                      }}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Password</td>
-                  <td>
-                    <TextField
-                      type="password"
-                      value={this.state.txtPassword}
-                      onChange={(e) => {
-                        this.setState({ txtPassword: e.target.value });
-                      }}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={(e) => this.btnLoginClick(e)}
-                    >
-                      LOGIN
-                    </Button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </form>
-        </div>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            bgcolor: "background.default",
+          }}
+        >
+          <Card sx={{ p: 4 }}>
+            <Typography variant="h4" component="h2" align="center" gutterBottom>
+              ADMIN LOGIN
+            </Typography>
+            <form>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    type="text"
+                    label="Username"
+                    value={this.state.txtUsername}
+                    onChange={(e) => {
+                      this.setState({ txtUsername: e.target.value });
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    type="password"
+                    label="Password"
+                    value={this.state.txtPassword}
+                    onChange={(e) => {
+                      this.setState({ txtPassword: e.target.value });
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    onClick={(e) => this.btnLoginClick(e)}
+                  >
+                    LOGIN
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          </Card>
+        </Box>
       );
     }
     return <div />;

@@ -22,8 +22,16 @@ class Home extends Component {
 
   renderProductItem(item) {
     return (
-      <Grid item xs={12} sm={6} md={4} lg={3} key={item._id}>
-        <Card sx={{ maxWidth: 345 }}>
+      <Grid
+        item
+        xs={12}
+        sm={6}
+        md={4}
+        lg={3}
+        key={item._id}
+        sx={{ display: "flex" }}
+      >
+        <Card sx={{ maxWidth: 345, height: "100%" }}>
           <CardActionArea component={Link} to={"/product/" + item._id}>
             <CardMedia
               component="img"
@@ -31,12 +39,18 @@ class Home extends Component {
               image={"data:image/jpg;base64," + item.image}
               alt={item.name}
             />
-            <CardContent>
+            <CardContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+              }}
+            >
               <Typography gutterBottom variant="h5" component="div">
                 {item.name}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Price: {item.price}
+                Price: {item.price} VNĐ
               </Typography>
             </CardContent>
           </CardActionArea>

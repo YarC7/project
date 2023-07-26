@@ -82,9 +82,11 @@ class NavigationComponent extends Component {
             >
               {cates}
             </StyledMenu>
-            <Typography variant="h6" component="div">
-              Shop Cảnh Phúc
-            </Typography>
+            <Link to="/" style={{ textDecoration: "none" }}>
+              <Typography variant="h5" component="div">
+                Shop Cảnh Phúc
+              </Typography>
+            </Link>
           </Box>
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
