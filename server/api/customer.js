@@ -76,9 +76,9 @@ router.post("/login", async function (req, res) {
           res.json({ success: false, message: "Account is deactivated" });
         }
       } else {
-        res.status(400).json({
+        res.json({
           success: false,
-          error: "Password Incorrect",
+          message: "Password Incorrect",
         });
       }
     } else {

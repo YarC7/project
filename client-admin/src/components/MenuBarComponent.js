@@ -60,6 +60,9 @@ const MenuBar = () => {
               <Button color="inherit" component={Link} to="/admin/customer">
                 Customer
               </Button>
+              <Button color="inherit" component={Link} to="/admin/add-admin">
+                Create Admin
+              </Button>
             </Grid>
           </Grid>
         </Box>

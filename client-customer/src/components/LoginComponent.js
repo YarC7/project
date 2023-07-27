@@ -48,9 +48,14 @@ class Login extends Component {
       if (result.success === true) {
         this.context.setToken(result.token);
         this.context.setCustomer(result.customer);
+        sessionStorage.setItem("customer", JSON.stringify(result.customer));
+        console.log(JSON.parse(sessionStorage.getItem("customer")));
         this.props.navigate("/home");
       } else {
-        this.setState({ snackbarOpen: true, snackbarMessage: result.message });
+        this.setState({
+          snackbarOpen: true,
+          snackbarMessage: result.message,
+        });
       }
     });
   }

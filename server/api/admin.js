@@ -1,4 +1,5 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
 const router = express.Router();
 // utils
 const JwtUtil = require("../utils/JwtUtil");
@@ -169,4 +170,27 @@ router.get(
     res.json(orders);
   }
 );
+router.post("/add-admin", JwtUtil.checkToken, async function (req, res) {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  if (!username || !password) {
+    res.json({
+      success: false,
+      message: "Please provide both username and password.",
+    });
+    return;
+  }
+  const dbAdmin = await AdminDAO.selectByUsername(username);
+  if (dbAdmin) {
+    res.json({ success: false, message: "Exists username" });
+  } else {
+    const admin = { username: username, password: password };
+    const result = await AdminDAO.insert(admin);
+    res.json({
+      success: true,
+      message: "Create Admin Successful",
+    });
+  }
+});
 module.exports = router;
