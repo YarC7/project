@@ -100,7 +100,7 @@ class NavigationComponent extends Component {
                 component="div"
                 style={{ color: "white" }}
               >
-                Shop Cảnh Phúc
+                TechShop-PC
               </Typography>
             </Link>
           </Box>

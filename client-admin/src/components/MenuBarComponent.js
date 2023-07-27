@@ -44,7 +44,7 @@ const MenuBar = () => {
                 sx={{ flexGrow: 1, textDecoration: "none" }}
                 color="inherit"
               >
-                Shop Cảnh Phúc
+                TechShop-PC
               </Typography>
             </Grid>
             <Grid item>
