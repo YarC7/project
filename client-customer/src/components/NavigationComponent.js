@@ -63,7 +63,7 @@ class NavigationComponent extends Component {
     });
 
     return (
-      <AppBar position="sticky" sx={{ bgcolor: "#f7797d", color: "#333" }}>
+      <AppBar position="sticky" color="primary">
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <IconButton

@@ -9,6 +9,7 @@ import {
   CardMedia,
   CardContent,
   CardActionArea,
+  CircularProgress,
 } from "@mui/material";
 import withRouter from "../utils/withRouter";
 
@@ -17,10 +18,12 @@ class Product extends Component {
     super(props);
     this.state = {
       products: [],
+      loading: true, // Add loading state
     };
   }
   render() {
-    const prods = this.state.products.map((item) => {
+    const { loading, products } = this.state; // Destructure loading and products from state
+    const prods = products.map((item) => {
       return (
         <Grid
           item
@@ -64,9 +67,15 @@ class Product extends Component {
         <Typography variant="h4" align="center" sx={{ mb: 4 }}>
           LIST PRODUCTS
         </Typography>
-        <Grid container spacing={2}>
-          {prods}
-        </Grid>
+        {loading ? ( // Render the loading circle if loading is true
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Grid container spacing={2}>
+            {prods}
+          </Grid>
+        )}
       </Box>
     );
   }
@@ -89,16 +98,18 @@ class Product extends Component {
     }
   }
   apiGetProductsByKeyword(keyword) {
+    this.setState({ loading: true }); // Set loading to true before making the API request
     axios.get("/api/customer/products/search/" + keyword).then((res) => {
       const result = res.data;
-      this.setState({ products: result });
+      this.setState({ products: result, loading: false }); // Set loading to false and update products state after the API request is complete
     });
   }
   // apis
   apiGetProductsByCatID(cid) {
+    this.setState({ loading: true }); // Set loading to true before making the API request
     axios.get("/api/customer/products/category/" + cid).then((res) => {
       const result = res.data;
-      this.setState({ products: result });
+      this.setState({ products: result, loading: false }); // Set loading to false and update products state after the API request is complete
     });
   }
 }

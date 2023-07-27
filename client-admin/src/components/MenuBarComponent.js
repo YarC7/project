@@ -9,8 +9,9 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Button,
 } from "@mui/material";
-import { AccountCircle, Menu as MenuIcon } from "@mui/icons-material";
+import { AccountCircle } from "@mui/icons-material";
 import MyContext from "../contexts/MyContext";
 
 const MenuBar = () => {
@@ -31,55 +32,51 @@ const MenuBar = () => {
   };
 
   return (
-    <AppBar position="static" color="default">
+    <AppBar position="static" color="primary">
       <Toolbar>
         <Box sx={{ flexGrow: 1 }}>
           <Grid container alignItems="center">
             <Grid item>
-              <IconButton
-                edge="start"
+              <Typography
+                variant="h6"
+                component={Link}
+                to="/admin/home"
+                sx={{ flexGrow: 1, textDecoration: "none" }}
                 color="inherit"
-                aria-label="menu"
-                sx={{ mr: 2 }}
               >
-                <MenuIcon />
-              </IconButton>
+                Shop Cảnh Phúc
+              </Typography>
             </Grid>
             <Grid item>
-              <ul className="menu">
-                <li className="menu">
-                  <Link to="/admin/home">Home</Link>
-                </li>
-                <li className="menu">
-                  <Link to="/admin/category">Category</Link>
-                </li>
-                <li className="menu">
-                  <Link to="/admin/product">Product</Link>
-                </li>
-                <li className="menu">
-                  <Link to="/admin/order">Order</Link>
-                </li>
-                <li className="menu">
-                  <Link to="/admin/customer">Customer</Link>
-                </li>
-              </ul>
+              <Button color="inherit" component={Link} to="/admin/category">
+                Category
+              </Button>
+              <Button color="inherit" component={Link} to="/admin/product">
+                Product
+              </Button>
+              <Button color="inherit" component={Link} to="/admin/order">
+                Order
+              </Button>
+              <Button color="inherit" component={Link} to="/admin/customer">
+                Customer
+              </Button>
             </Grid>
           </Grid>
         </Box>
-        <div className="float-right">
-          <Typography variant="subtitle1">
-            <IconButton onClick={handleMenuClick}>
-              <AccountCircle />
-            </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleMenuClose}
-            >
-              <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
-            </Menu>
-            Hello <b>{username}</b>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Typography variant="subtitle1" sx={{ ml: 2 }}>
+            Hello, <b>{username}</b>
           </Typography>
+          <IconButton onClick={handleMenuClick} color="inherit">
+            <AccountCircle />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+          >
+            <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
+          </Menu>
         </div>
       </Toolbar>
     </AppBar>

@@ -8,12 +8,26 @@ class Home extends Component {
         <Typography variant="h4" component="h2" align="center">
           ADMIN HOME
         </Typography>
-        <img
-          src="http://cliparting.com/wp-content/uploads/2018/03/animated-emoticons-2018-13.gif"
-          width="800px"
-          height="600px"
-          alt=""
-        />
+        <div
+          style={{
+            width: "600px",
+            height: "400px",
+            paddingBottom: "45%",
+            position: "relative",
+          }}
+          className="align-center"
+        >
+          <iframe
+            src="https://giphy.com/embed/l1J9urAfGd3grKV6E"
+            width="100%"
+            height="100%"
+            style={{ position: "absolute" }}
+            frameBorder="0"
+            className="giphy-embed"
+            allowFullScreen
+            title="Welcome Home Minions GIF"
+          ></iframe>
+        </div>
       </div>
     );
   }

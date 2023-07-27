@@ -7,6 +7,8 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Typography,
+  Box,
 } from "@mui/material";
 import axios from "axios";
 import MyContext from "../contexts/MyContext";
@@ -51,26 +53,30 @@ class Category extends Component {
         className="datatable"
         onClick={() => this.trItemClick(item)}
       >
-        <TableCell>{item._id}</TableCell>
-        <TableCell>{item.name}</TableCell>
+        <TableCell width="20%">{item._id}</TableCell>
+        <TableCell width="80%">{item.name}</TableCell>
       </TableRow>
     ));
 
     return (
       <div>
         <div className="float-left">
-          <h2 className="text-center">CATEGORY LIST</h2>
-          <TableContainer component={Paper}>
-            <Table className="datatable" border="1">
-              <TableHead>
-                <TableRow className="datatable">
-                  <TableCell>ID</TableCell>
-                  <TableCell>Name</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>{cates}</TableBody>
-            </Table>
-          </TableContainer>
+          <Box mt={2} mb={2}>
+            <Typography variant="h5" align="center">
+              CATEGORY DETAIL
+            </Typography>
+            <TableContainer component={Paper}>
+              <Table className="datatable" border="1">
+                <TableHead>
+                  <TableRow className="datatable">
+                    <TableCell width="30%">ID</TableCell>
+                    <TableCell width="50%">Name</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>{cates}</TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
         </div>
         <div className="inline" />
         <CategoryDetail

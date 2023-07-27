@@ -2,15 +2,21 @@ import React, { Component } from "react";
 import {
   TextField,
   Button,
+  ButtonGroup,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableRow,
   Paper,
+  Typography,
+  Box,
 } from "@mui/material";
 import axios from "axios";
 import MyContext from "../contexts/MyContext";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import ModeEditOutlinedIcon from "@mui/icons-material/ModeEditOutlined";
+import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 
 class CategoryDetail extends Component {
   static contextType = MyContext; // using this.context to access global state
@@ -34,21 +40,26 @@ class CategoryDetail extends Component {
   render() {
     return (
       <div className="float-right">
-        <h2 className="text-center">CATEGORY DETAIL</h2>
+        <Box mt={2} mb={2}>
+          <Typography variant="h5" align="center">
+            CATEGORY DETAIL
+          </Typography>
+        </Box>
         <form>
-          <TableContainer component={Paper}>
+          <TableContainer component={Paper} sx={{ border: "1px solid grey" }}>
             <Table>
               <TableBody>
                 <TableRow>
                   <TableCell>ID</TableCell>
                   <TableCell>
                     <TextField
+                      fullWidth
                       type="text"
                       value={this.state.txtID}
                       onChange={(e) => {
                         this.setState({ txtID: e.target.value });
                       }}
-                      readOnly
+                      disabled
                     />
                   </TableCell>
                 </TableRow>
@@ -56,6 +67,7 @@ class CategoryDetail extends Component {
                   <TableCell>Name</TableCell>
                   <TableCell>
                     <TextField
+                      fullWidth
                       type="text"
                       value={this.state.txtName}
                       onChange={(e) => {
@@ -67,27 +79,26 @@ class CategoryDetail extends Component {
                 <TableRow>
                   <TableCell></TableCell>
                   <TableCell>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={(e) => this.btnAddClick(e)}
-                    >
-                      ADD NEW
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={(e) => this.btnUpdateClick(e)}
-                    >
-                      UPDATE
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={(e) => this.btnDeleteClick(e)}
-                    >
-                      DELETE
-                    </Button>
+                    <ButtonGroup variant="contained" color="primary">
+                      <Button
+                        startIcon={<AddCircleOutlineOutlinedIcon />}
+                        onClick={(e) => this.btnAddClick(e)}
+                      >
+                        ADD NEW
+                      </Button>
+                      <Button
+                        startIcon={<ModeEditOutlinedIcon />}
+                        onClick={(e) => this.btnUpdateClick(e)}
+                      >
+                        UPDATE
+                      </Button>
+                      <Button
+                        startIcon={<DeleteOutlineOutlinedIcon />}
+                        onClick={(e) => this.btnDeleteClick(e)}
+                      >
+                        DELETE
+                      </Button>
+                    </ButtonGroup>
                   </TableCell>
                 </TableRow>
               </TableBody>
