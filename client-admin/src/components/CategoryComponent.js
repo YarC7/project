@@ -62,9 +62,11 @@ class Category extends Component {
       <div>
         <div className="float-left">
           <Box mt={2} mb={2}>
-            <Typography variant="h5" align="center">
-              CATEGORY DETAIL
-            </Typography>
+            <Box mt={2} mb={2}>
+              <Typography variant="h5" align="center">
+                CATEGORY LIST
+              </Typography>
+            </Box>
             <TableContainer component={Paper}>
               <Table className="datatable" border="1">
                 <TableHead>

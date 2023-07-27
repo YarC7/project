@@ -83,6 +83,7 @@ class Product extends Component {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              p: 2,
             }}
           >
             <Typography variant="h4" gutterBottom>
