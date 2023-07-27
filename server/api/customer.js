@@ -99,10 +99,12 @@ router.put("/customers/:id", JwtUtil.checkToken, async function (req, res) {
   const name = req.body.name;
   const phone = req.body.phone;
   const email = req.body.email;
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
   const customer = {
     _id: _id,
     username: username,
-    password: password,
+    password: hash,
     name: name,
     phone: phone,
     email: email,
