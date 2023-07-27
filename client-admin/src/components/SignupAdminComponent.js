@@ -94,7 +94,7 @@ class SignupAdmin extends Component {
               }}
             >
               <Typography variant="h4" align="center" sx={{ mb: 4 }}>
-                SIGN-UP
+                CREATE ADMIN
               </Typography>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
