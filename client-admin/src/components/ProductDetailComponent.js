@@ -166,7 +166,11 @@ class ProductDetail extends Component {
   }
   // apis
   apiGetCategories() {
-    const config = { headers: { "x-access-token": this.context.token } };
+    const config = {
+      headers: {
+        "x-access-token": JSON.parse(sessionStorage.getItem("token")),
+      },
+    };
     axios.get("/api/admin/categories", config).then((res) => {
       const result = res.data;
       this.setState({ categories: result });
@@ -195,7 +199,11 @@ class ProductDetail extends Component {
   }
   // apis
   apiPostProduct(prod) {
-    const config = { headers: { "x-access-token": this.context.token } };
+    const config = {
+      headers: {
+        "x-access-token": JSON.parse(sessionStorage.getItem("token")),
+      },
+    };
     axios.post("/api/admin/products", prod, config).then((res) => {
       const result = res.data;
       if (result) {
@@ -207,7 +215,11 @@ class ProductDetail extends Component {
     });
   }
   apiGetProducts() {
-    const config = { headers: { "x-access-token": this.context.token } };
+    const config = {
+      headers: {
+        "x-access-token": JSON.parse(sessionStorage.getItem("token")),
+      },
+    };
     axios
       .get("/api/admin/products?page=" + this.props.curPage, config)
       .then((res) => {
@@ -248,7 +260,11 @@ class ProductDetail extends Component {
   }
   // apis
   apiPutProduct(id, prod) {
-    const config = { headers: { "x-access-token": this.context.token } };
+    const config = {
+      headers: {
+        "x-access-token": JSON.parse(sessionStorage.getItem("token")),
+      },
+    };
     axios.put("/api/admin/products/" + id, prod, config).then((res) => {
       const result = res.data;
       if (result) {
@@ -271,7 +287,11 @@ class ProductDetail extends Component {
     }
   }
   apiDeleteProduct(id) {
-    const config = { headers: { "x-access-token": this.context.token } };
+    const config = {
+      headers: {
+        "x-access-token": JSON.parse(sessionStorage.getItem("token")),
+      },
+    };
     axios.delete("/api/admin/products/" + id, config).then((res) => {
       const result = res.data;
       if (result) {

@@ -10,10 +10,8 @@ import {
   Button,
 } from "@mui/material";
 import axios from "axios";
-import MyContext from "../contexts/MyContext";
 
 class Customer extends Component {
-  static contextType = MyContext; // using this.context to access global state
   constructor(props) {
     super(props);
     this.state = {
@@ -178,7 +176,11 @@ class Customer extends Component {
   }
 
   apiGetCustomerSendmail(id) {
-    const config = { headers: { "x-access-token": this.context.token } };
+    const config = {
+      headers: {
+        "x-access-token": JSON.parse(sessionStorage.getItem("token")),
+      },
+    };
     axios.get("/api/admin/customers/sendmail/" + id, config).then((res) => {
       const result = res.data;
       alert(result.message);
@@ -187,7 +189,11 @@ class Customer extends Component {
 
   apiPutCustomerDeactive(id, token) {
     const body = { token: token };
-    const config = { headers: { "x-access-token": this.context.token } };
+    const config = {
+      headers: {
+        "x-access-token": JSON.parse(sessionStorage.getItem("token")),
+      },
+    };
     axios
       .put("/api/admin/customers/deactive/" + id, body, config)
       .then((res) => {
@@ -210,7 +216,11 @@ class Customer extends Component {
   }
 
   apiGetCustomers() {
-    const config = { headers: { "x-access-token": this.context.token } };
+    const config = {
+      headers: {
+        "x-access-token": JSON.parse(sessionStorage.getItem("token")),
+      },
+    };
     axios.get("/api/admin/customers", config).then((res) => {
       const result = res.data;
       this.setState({ customers: result });
@@ -218,7 +228,11 @@ class Customer extends Component {
   }
 
   apiGetOrdersByCustID(cid) {
-    const config = { headers: { "x-access-token": this.context.token } };
+    const config = {
+      headers: {
+        "x-access-token": JSON.parse(sessionStorage.getItem("token")),
+      },
+    };
     axios.get("/api/admin/orders/customer/" + cid, config).then((res) => {
       const result = res.data;
       this.setState({ orders: result });

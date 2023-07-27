@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import { TextField, Button, Typography, Grid, Card, Box } from "@mui/material";
-import MyContext from "../contexts/MyContext";
 import axios from "axios";
 
 class Login extends Component {
-  static contextType = MyContext; // using this.context to access global state
   constructor(props) {
     super(props);
     this.state = {
@@ -14,7 +12,7 @@ class Login extends Component {
   }
 
   render() {
-    if (this.context.token === "") {
+    if (JSON.parse(sessionStorage.getItem("token")) === null) {
       return (
         <Box
           sx={{
@@ -88,8 +86,9 @@ class Login extends Component {
     axios.post("/api/admin/login", account).then((res) => {
       const result = res.data;
       if (result.success === true) {
-        this.context.setToken(result.token);
-        this.context.setUsername(account.username);
+        sessionStorage.setItem("token", JSON.stringify(result.token));
+        sessionStorage.setItem("username", JSON.stringify(account.username));
+        this.props.history.push("/admin/home");
       } else {
         alert(result.message);
       }

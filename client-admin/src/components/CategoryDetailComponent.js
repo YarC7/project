@@ -13,13 +13,11 @@ import {
   Box,
 } from "@mui/material";
 import axios from "axios";
-import MyContext from "../contexts/MyContext";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import ModeEditOutlinedIcon from "@mui/icons-material/ModeEditOutlined";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 
 class CategoryDetail extends Component {
-  static contextType = MyContext; // using this.context to access global state
   constructor(props) {
     super(props);
     this.state = {
@@ -121,7 +119,11 @@ class CategoryDetail extends Component {
   }
 
   apiPostCategory(cate) {
-    const config = { headers: { "x-access-token": this.context.token } };
+    const config = {
+      headers: {
+        "x-access-token": JSON.parse(sessionStorage.getItem("token")),
+      },
+    };
     axios.post("/api/admin/categories", cate, config).then((res) => {
       const result = res.data;
       if (result) {
@@ -134,7 +136,11 @@ class CategoryDetail extends Component {
   }
 
   apiGetCategories() {
-    const config = { headers: { "x-access-token": this.context.token } };
+    const config = {
+      headers: {
+        "x-access-token": JSON.parse(sessionStorage.getItem("token")),
+      },
+    };
     axios.get("/api/admin/categories", config).then((res) => {
       const result = res.data;
       this.props.updateCategories(result);
@@ -154,7 +160,11 @@ class CategoryDetail extends Component {
   }
 
   apiPutCategory(id, cate) {
-    const config = { headers: { "x-access-token": this.context.token } };
+    const config = {
+      headers: {
+        "x-access-token": JSON.parse(sessionStorage.getItem("token")),
+      },
+    };
     axios.put("/api/admin/categories/" + id, cate, config).then((res) => {
       const result = res.data;
       if (result) {
@@ -179,7 +189,11 @@ class CategoryDetail extends Component {
   }
 
   apiDeleteCategory(id) {
-    const config = { headers: { "x-access-token": this.context.token } };
+    const config = {
+      headers: {
+        "x-access-token": JSON.parse(sessionStorage.getItem("token")),
+      },
+    };
     axios.delete("/api/admin/categories/" + id, config).then((res) => {
       const result = res.data;
       if (result) {

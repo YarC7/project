@@ -11,11 +11,9 @@ import {
   Box,
 } from "@mui/material";
 import axios from "axios";
-import MyContext from "../contexts/MyContext";
 import CategoryDetail from "./CategoryDetailComponent";
 
 class Category extends Component {
-  static contextType = MyContext; // using this.context to access global state
   constructor(props) {
     super(props);
     this.state = {
@@ -39,7 +37,11 @@ class Category extends Component {
 
   // apis
   apiGetCategories() {
-    const config = { headers: { "x-access-token": this.context.token } };
+    const config = {
+      headers: {
+        "x-access-token": JSON.parse(sessionStorage.getItem("token")),
+      },
+    };
     axios.get("/api/admin/categories", config).then((res) => {
       const result = res.data;
       this.setState({ categories: result });

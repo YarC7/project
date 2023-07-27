@@ -9,26 +9,30 @@ import Order from "./OrderComponent";
 import Customer from "./CustomerComponent";
 import SignupAdmin from "./SignupAdminComponent";
 class Main extends Component {
-  static contextType = MyContext; // using this.context to access global state
   render() {
-    if (this.context.token !== "") {
-      return (
-        <div className="body-admin">
-          <MenuBar />
-          <Routes>
-            <Route
-              path="/admin"
-              element={<Navigate replace to="/admin/home" />}
-            />
-            <Route path="/admin/home" element={<Home />} />
-            <Route path="/admin/category" element={<Category />} />
-            <Route path="/admin/product" element={<Product />} />
-            <Route path="/admin/order" element={<Order />} />
-            <Route path="/admin/customer" element={<Customer />} />
-            <Route path="/admin/add-admin" element={<SignupAdmin />} />
-          </Routes>
-        </div>
-      );
+    try {
+      const token = JSON.parse(sessionStorage.getItem("token"));
+      if (token !== null) {
+        return (
+          <div className="body-admin">
+            <MenuBar />
+            <Routes>
+              <Route
+                path="/admin"
+                element={<Navigate replace to="/admin/home" />}
+              />
+              <Route path="/admin/home" element={<Home />} />
+              <Route path="/admin/category" element={<Category />} />
+              <Route path="/admin/product" element={<Product />} />
+              <Route path="/admin/order" element={<Order />} />
+              <Route path="/admin/customer" element={<Customer />} />
+              <Route path="/admin/add-admin" element={<SignupAdmin />} />
+            </Routes>
+          </div>
+        );
+      }
+    } catch (error) {
+      console.error(error);
     }
     return <div />;
   }

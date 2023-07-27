@@ -15,12 +15,12 @@ import { AccountCircle } from "@mui/icons-material";
 import MyContext from "../contexts/MyContext";
 
 const MenuBar = () => {
-  const { username, setToken, setUsername } = useContext(MyContext);
   const [anchorEl, setAnchorEl] = useState(null);
-
+  const username = JSON.parse(sessionStorage.getItem("username"));
   const handleLogoutClick = () => {
-    setToken("");
-    setUsername("");
+    sessionStorage.removeItem("username");
+    sessionStorage.removeItem("token");
+    window.location.href = "/admin";
   };
 
   const handleMenuClick = (event) => {

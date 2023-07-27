@@ -177,7 +177,11 @@ class Order extends Component {
   }
 
   apiGetOrders() {
-    const config = { headers: { "x-access-token": this.context.token } };
+    const config = {
+      headers: {
+        "x-access-token": JSON.parse(sessionStorage.getItem("token")),
+      },
+    };
     axios.get("/api/admin/orders", config).then((res) => {
       const result = res.data;
       this.setState({ orders: result, isLoading: false });
@@ -186,7 +190,11 @@ class Order extends Component {
 
   apiPutOrderStatus(id, status) {
     const body = { status: status };
-    const config = { headers: { "x-access-token": this.context.token } };
+    const config = {
+      headers: {
+        "x-access-token": JSON.parse(sessionStorage.getItem("token")),
+      },
+    };
     axios.put("/api/admin/orders/status/" + id, body, config).then((res) => {
       const result = res.data;
       if (result) {

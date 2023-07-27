@@ -17,7 +17,6 @@ import {
 } from "@mui/material";
 
 class Product extends Component {
-  static contextType = MyContext; // using this.context to access global state
   constructor(props) {
     super(props);
     this.state = {
@@ -135,7 +134,11 @@ class Product extends Component {
   }
   // apis
   apiGetProducts(page) {
-    const config = { headers: { "x-access-token": this.context.token } };
+    const config = {
+      headers: {
+        "x-access-token": JSON.parse(sessionStorage.getItem("token")),
+      },
+    };
     axios.get("/api/admin/products?page=" + page, config).then((res) => {
       const result = res.data;
       this.setState({
