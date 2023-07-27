@@ -21,6 +21,7 @@ import {
   Menu as MenuIcon,
   Search as SearchIcon,
 } from "@mui/icons-material";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { styled } from "@mui/material/styles";
 import withRouter from "../utils/withRouter";
 
@@ -57,7 +58,18 @@ class NavigationComponent extends Component {
     const cates = categories.map((item) => {
       return (
         <MenuItem key={item._id} onClick={this.handleMenuClose}>
-          <Link to={"/product/category/" + item._id}>{item.name}</Link>
+          <Link
+            to={"/product/category/" + item._id}
+            style={{
+              textDecoration: "none",
+              color: "blue",
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", py: 1 }}>
+              <span style={{ marginRight: "8px" }}>{item.name}</span>
+              <ArrowForwardIosIcon fontSize="small" />
+            </Box>
+          </Link>
         </MenuItem>
       );
     });
@@ -83,7 +95,11 @@ class NavigationComponent extends Component {
               {cates}
             </StyledMenu>
             <Link to="/" style={{ textDecoration: "none" }}>
-              <Typography variant="h5" component="div">
+              <Typography
+                variant="h5"
+                component="div"
+                style={{ color: "white" }}
+              >
                 Shop Cảnh Phúc
               </Typography>
             </Link>
@@ -93,13 +109,13 @@ class NavigationComponent extends Component {
             {token === "" ? (
               <Stack direction="row" spacing={2}>
                 <Link to="/login" style={{ textDecoration: "none" }}>
-                  <Button color="primary">Login</Button>
+                  <Button style={{ color: "white" }}>Login</Button>
                 </Link>
                 <Link to="/signup" style={{ textDecoration: "none" }}>
-                  <Button color="secondary">Sign up</Button>
+                  <Button style={{ color: "white" }}>Sign up</Button>
                 </Link>
                 <Link to="/active" style={{ textDecoration: "none" }}>
-                  <Button color="primary">Active</Button>
+                  <Button style={{ color: "white" }}>Active</Button>
                 </Link>
               </Stack>
             ) : (

@@ -4,6 +4,7 @@ import MyContext from "../contexts/MyContext";
 import ProductDetail from "./ProductDetailComponent";
 import {
   Box,
+  CircularProgress,
   Pagination,
   Paper,
   Table,
@@ -24,9 +25,26 @@ class Product extends Component {
       noPages: 0,
       curPage: 1,
       itemSelected: null,
+      loading: false, // Add loading state
     };
   }
   render() {
+    // Render the loading circle if loading is true
+    if (this.state.loading) {
+      return (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      );
+    }
+
     const prods = this.state.products.map((item) => {
       return (
         <TableRow
@@ -54,6 +72,7 @@ class Product extends Component {
       );
     });
     const handleChange = (event, value) => {
+      this.setState({ curPage: value, loading: true }); // Set loading to true before making the API request
       this.apiGetProducts(value);
     };
     return (
@@ -106,6 +125,7 @@ class Product extends Component {
     this.setState({ products: products, noPages: noPages });
   };
   componentDidMount() {
+    this.setState({ loading: true }); // Set loading to true before making the API request
     this.apiGetProducts(this.state.curPage);
   }
   // event-handlers
@@ -121,6 +141,7 @@ class Product extends Component {
         products: result.products,
         noPages: result.noPages,
         curPage: result.curPage,
+        loading: false, // Set loading to false after the API request is completed
       });
     });
   }

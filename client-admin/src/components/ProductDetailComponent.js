@@ -88,20 +88,25 @@ class ProductDetail extends Component {
             </Select>
           </FormControl>
           <Box sx={{ mt: 2 }}>
-            <input
-              type="file"
-              name="fileImage"
-              accept="image/jpeg, image/png, image/gif"
-              onChange={(e) => this.previewImage(e)}
-            />
-          </Box>
-          <Box sx={{ mt: 2 }}>
-            <img
-              src={this.state.imgProduct}
-              width="300px"
-              height="300px"
-              alt=""
-            />
+            <label htmlFor="file-upload">
+              <img
+                src={this.state.imgProduct}
+                width="300px"
+                height="300px"
+                alt=""
+              />
+              <input
+                id="file-upload"
+                type="file"
+                name="fileImage"
+                accept="image/jpeg, image/png, image/gif"
+                onChange={(e) => this.previewImage(e)}
+                style={{ display: "none" }}
+              />
+              <div className="overlay">
+                <i className="fa fa-plus"></i>
+              </div>
+            </label>
           </Box>
           <Box sx={{ mt: 2 }}>
             <Button

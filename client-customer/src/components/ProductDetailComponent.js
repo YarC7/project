@@ -14,6 +14,7 @@ import {
   TableRow,
   TextField,
   Button,
+  CircularProgress,
 } from "@mui/material";
 import { AddShoppingCart } from "@mui/icons-material";
 import MyContext from "../contexts/MyContext";
@@ -31,11 +32,21 @@ class ProductDetail extends Component {
     this.state = {
       product: null,
       txtQuantity: 1,
+      loading: true, // Add loading state
     };
   }
   render() {
-    const prod = this.state.product;
-    if (prod != null) {
+    const { loading, product, txtQuantity } = this.state; // Destructure loading, product, and txtQuantity from state
+    if (loading) {
+      // Render the loading circle if loading is true
+      return (
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+          <CircularProgress />
+        </Box>
+      );
+    }
+    if (product != null) {
+      // Render the UI once the product details have been fetched
       return (
         <Box sx={{ mt: 4 }}>
           <Typography variant="h4" align="center" sx={{ mb: 4 }}>
@@ -46,8 +57,8 @@ class ProductDetail extends Component {
               <Card>
                 <ProductImage
                   component="img"
-                  image={"data:image/jpg;base64," + prod.image}
-                  alt={prod.name}
+                  image={"data:image/jpg;base64," + product.image}
+                  alt={product.name}
                 />
               </Card>
             </Grid>
@@ -57,19 +68,19 @@ class ProductDetail extends Component {
                   <TableBody>
                     <TableRow>
                       <TableCell>ID:</TableCell>
-                      <TableCell>{prod._id}</TableCell>
+                      <TableCell>{product._id}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Name:</TableCell>
-                      <TableCell>{prod.name}</TableCell>
+                      <TableCell>{product.name}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Price:</TableCell>
-                      <TableCell>{prod.price} VNĐ</TableCell>
+                      <TableCell>{product.price} VNĐ</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Category:</TableCell>
-                      <TableCell>{prod.category.name}</TableCell>
+                      <TableCell>{product.category.name}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Quantity:</TableCell>
@@ -79,7 +90,7 @@ class ProductDetail extends Component {
                           variant="outlined"
                           size="small"
                           inputProps={{ min: 1, max: 99 }}
-                          value={this.state.txtQuantity}
+                          value={txtQuantity}
                           onChange={(e) => {
                             this.setState({ txtQuantity: e.target.value });
                           }}
@@ -115,9 +126,10 @@ class ProductDetail extends Component {
   }
   // apis
   apiGetProduct(id) {
+    this.setState({ loading: true }); // Set loading to true before making the API request
     axios.get("/api/customer/products/" + id).then((res) => {
       const result = res.data;
-      this.setState({ product: result });
+      this.setState({ product: result, loading: false }); // Set loading to false and update product state after the API request is complete
     });
   }
   btnAdd2CartClick(e) {

@@ -11,6 +11,7 @@ import {
   TableRow,
   Paper,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -25,6 +26,7 @@ class Myorders extends Component {
     this.state = {
       orders: [],
       order: null,
+      loading: false, // Add loading state
     };
   }
   render() {
@@ -83,7 +85,11 @@ class Myorders extends Component {
             <TableBody>{orders}</TableBody>
           </MyTable>
         </TableContainer>
-        {this.state.order ? (
+        {this.state.loading ? ( // Render the loading circle if loading is true
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <CircularProgress />
+          </div>
+        ) : this.state.order ? (
           <div>
             <Typography variant="h4" align="center">
               ORDER DETAIL
@@ -114,6 +120,7 @@ class Myorders extends Component {
   componentDidMount() {
     if (this.context.customer) {
       const cid = this.context.customer._id;
+      this.setState({ loading: true }); // Set loading to true before making the API request
       this.apiGetOrdersByCustID(cid);
     }
   }
@@ -126,7 +133,7 @@ class Myorders extends Component {
     const config = { headers: { "x-access-token": this.context.token } };
     axios.get("/api/customer/orders/customer/" + cid, config).then((res) => {
       const result = res.data;
-      this.setState({ orders: result });
+      this.setState({ orders: result, loading: false }); // Set loading to false after the API request is complete
     });
   }
 }

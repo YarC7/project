@@ -1,7 +1,7 @@
+import axios from "axios";
 import React, { Component } from "react";
 import MyContext from "../contexts/MyContext";
 import CartUtil from "../utils/CartUtil";
-import axios from "axios";
 import {
   Button,
   Table,
@@ -12,6 +12,7 @@ import {
   TableRow,
   Paper,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import withRouter from "../utils/withRouter";
@@ -30,6 +31,13 @@ const MyButton = styled(Button)({
 
 class Mycart extends Component {
   static contextType = MyContext; // using this.context to access global state
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false, // Add loading state
+    };
+  }
 
   render() {
     const mycart = this.context.mycart.map((item, index) => {
@@ -90,13 +98,17 @@ class Mycart extends Component {
                 <TableCell>Total</TableCell>
                 <TableCell>{CartUtil.getTotal(this.context.mycart)}</TableCell>
                 <TableCell>
-                  <MyButton
-                    variant="contained"
-                    disableElevation
-                    onClick={() => this.lnkCheckoutClick()}
-                  >
-                    CHECKOUT
-                  </MyButton>
+                  {this.state.loading ? ( // Render the loading circle if loading is true
+                    <CircularProgress />
+                  ) : (
+                    <MyButton
+                      variant="contained"
+                      disableElevation
+                      onClick={() => this.lnkCheckoutClick()}
+                    >
+                      CHECKOUT
+                    </MyButton>
+                  )}
                 </TableCell>
               </TableRow>
             </TableBody>
@@ -123,6 +135,7 @@ class Mycart extends Component {
         const items = this.context.mycart;
         const customer = this.context.customer;
         if (customer) {
+          this.setState({ loading: true }); // Set loading to true before making the API request
           this.apiCheckout(total, items, customer);
         } else {
           this.props.navigate("/login");
@@ -139,6 +152,7 @@ class Mycart extends Component {
     const config = { headers: { "x-access-token": this.context.token } };
     axios.post("/api/customer/checkout", body, config).then((res) => {
       const result = res.data;
+      this.setState({ loading: false }); // Set loading to false after the API request is completed
       if (result) {
         alert("OK BABY!");
         this.context.setMycart([]);

@@ -9,6 +9,7 @@ import {
   CardActionArea,
   CardContent,
   CardMedia,
+  CircularProgress,
 } from "@mui/material";
 
 class Home extends Component {
@@ -17,6 +18,7 @@ class Home extends Component {
     this.state = {
       newprods: [],
       hotprods: [],
+      loading: true, // Add loading state
     };
   }
 
@@ -60,32 +62,37 @@ class Home extends Component {
   }
 
   render() {
-    const newprods = this.state.newprods.map((item) =>
-      this.renderProductItem(item)
-    );
-    const hotprods = this.state.hotprods.map((item) =>
-      this.renderProductItem(item)
-    );
+    const { loading, newprods, hotprods } = this.state; // Destructure loading, newprods, and hotprods from state
+    const newprodsList = newprods.map((item) => this.renderProductItem(item));
+    const hotprodsList = hotprods.map((item) => this.renderProductItem(item));
 
     return (
       <Box sx={{ mt: 4 }}>
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="h2" align="center" gutterBottom>
-            NEW PRODUCTS
-          </Typography>
-          <Grid container spacing={2}>
-            {newprods}
-          </Grid>
-        </Box>
-        {this.state.hotprods.length > 0 && (
-          <Box sx={{ mb: 4 }}>
-            <Typography variant="h2" align="center" gutterBottom>
-              HOT PRODUCTS
-            </Typography>
-            <Grid container spacing={2}>
-              {hotprods}
-            </Grid>
+        {loading ? ( // Render the loading circle if loading is true
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <CircularProgress />
           </Box>
+        ) : (
+          <>
+            <Box sx={{ mb: 4 }}>
+              <Typography variant="h2" align="center" gutterBottom>
+                NEW PRODUCTS
+              </Typography>
+              <Grid container spacing={2}>
+                {newprodsList}
+              </Grid>
+            </Box>
+            {hotprods.length > 0 && (
+              <Box sx={{ mb: 4 }}>
+                <Typography variant="h2" align="center" gutterBottom>
+                  HOT PRODUCTS
+                </Typography>
+                <Grid container spacing={2}>
+                  {hotprodsList}
+                </Grid>
+              </Box>
+            )}
+          </>
         )}
       </Box>
     );
@@ -98,16 +105,18 @@ class Home extends Component {
 
   // apis
   apiGetNewProducts() {
+    this.setState({ loading: true }); // Set loading to true before making the API request
     axios.get("/api/customer/products/new").then((res) => {
       const result = res.data;
-      this.setState({ newprods: result });
+      this.setState({ newprods: result, loading: false }); // Set loading to false and update newprods state after the API request is complete
     });
   }
 
   apiGetHotProducts() {
+    this.setState({ loading: true }); // Set loading to true before making the API request
     axios.get("/api/customer/products/hot").then((res) => {
       const result = res.data;
-      this.setState({ hotprods: result });
+      this.setState({ hotprods: result, loading: false }); // Set loading to false and update hotprods state after the API request is complete
     });
   }
 }
