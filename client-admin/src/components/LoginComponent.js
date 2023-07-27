@@ -88,7 +88,7 @@ class Login extends Component {
       if (result.success === true) {
         sessionStorage.setItem("token", JSON.stringify(result.token));
         sessionStorage.setItem("username", JSON.stringify(account.username));
-        window.location.href="/admin/home";
+        window.location.href="/admin";
       } else {
         alert(result.message);
       }
