@@ -11,6 +11,43 @@ const ProductDAO = require("../models/ProductDAO");
 const OrderDAO = require("../models/OrderDAO");
 const CustomerDAO = require("../models/CustomerDAO");
 // login
+
+router.post("/signup", async function (req, res) {
+  const username = req.body.username;
+  const password = req.body.password;
+  // const name = req.body.name;
+  // const phone = req.body.phone;
+  const email = req.body.email;
+  const dbCust = await AdminDAO.selectByUsernameOrEmail(username, email);
+  if (dbCust) {
+    res.json({ success: false, message: "Exists username or email" });
+  } else {
+    const now = new Date().getTime(); // milliseconds
+    const token = CryptoUtil.md5(now.toString());
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
+    const newCust = {
+      username: username,
+      password: hash,
+      // name: name,
+      // phone: phone,
+      email: email,
+      active: 0,
+      token: token,
+    };
+    const result = await CustomerDAO.insert(newCust);
+    if (result) {
+      const send = await EmailUtil.send(email, result._id, token);
+      if (send) {
+        res.json({ success: true, message: "Please check email" });
+      } else {
+        res.json({ success: false, message: "Email failure" });
+      }
+    } else {
+      res.json({ success: false, message: "Insert failure" });
+    }
+  }
+});
 router.post("/login", async function (req, res) {
   const username = req.body.username;
   const password = req.body.password;

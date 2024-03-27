@@ -7,6 +7,11 @@ const AdminDAO = {
     const admin = await Models.Admin.findOne(query);
     return admin;
   },
+  async selectByUsernameOrEmail(username, email) {
+    const query = { $or: [{ username: username }, { email: email }] };
+    const admin = await Models.Admin.findOne(query);
+    return admin;
+  },
   async insert(admin) {
     const mongoose = require("mongoose");
     admin._id = new mongoose.Types.ObjectId();

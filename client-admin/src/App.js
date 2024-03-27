@@ -9,7 +9,7 @@ class App extends Component {
   render() {
     return (
       <MyProvider>
-        <Login />
+        {/* <Login /> */}
           <BrowserRouter >
             <Main />
           </BrowserRouter>
