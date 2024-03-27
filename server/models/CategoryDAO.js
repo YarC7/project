@@ -14,7 +14,7 @@ const CategoryDAO = {
     return result;
   },
   async update(category) {
-    const newvalues = { name: category.name };
+    const newvalues = { name: category.name , des: category.des};
     const result = await Models.Category.findByIdAndUpdate(
       category._id,
       newvalues,

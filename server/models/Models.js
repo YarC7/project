@@ -13,6 +13,7 @@ const CategorySchema = mongoose.Schema(
   {
     _id: mongoose.Schema.Types.ObjectId,
     name: String,
+    des: String,
   },
   { versionKey: false }
 );

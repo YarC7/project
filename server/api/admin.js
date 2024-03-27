@@ -114,14 +114,16 @@ router.get("/categories", JwtUtil.checkToken, async function (req, res) {
 });
 router.post("/categories", JwtUtil.checkToken, async function (req, res) {
   const name = req.body.name;
-  const category = { name: name };
+  const des = req.body.des;
+  const category = { name: name , des: des};
   const result = await CategoryDAO.insert(category);
   res.json(result);
 });
 router.put("/categories/:id", JwtUtil.checkToken, async function (req, res) {
   const _id = req.params.id;
   const name = req.body.name;
-  const category = { _id: _id, name: name };
+  const des = req.body.des;
+  const category = { _id: _id, name: name , des: des};
   const result = await CategoryDAO.update(category);
   res.json(result);
 });

@@ -52,10 +52,10 @@ const MenuBar = () => {
                 Category
               </Button>
               <Button color="inherit" component={Link} to="/admin/product">
-                Product
+                Device
               </Button>
               <Button color="inherit" component={Link} to="/admin/order">
-                Order
+                State
               </Button>
               <Button color="inherit" component={Link} to="/admin/customer">
                 Customer

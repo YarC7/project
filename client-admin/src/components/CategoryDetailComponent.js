@@ -23,6 +23,7 @@ class CategoryDetail extends Component {
     this.state = {
       txtID: "",
       txtName: "",
+      txtDes: "",
     };
   }
 
@@ -31,6 +32,7 @@ class CategoryDetail extends Component {
       this.setState({
         txtID: this.props.item._id,
         txtName: this.props.item.name,
+        txtDes: this.props.item.des,
       });
     }
   }
@@ -75,6 +77,19 @@ class CategoryDetail extends Component {
                   </TableCell>
                 </TableRow>
                 <TableRow>
+                  <TableCell>Description</TableCell>
+                  <TableCell>
+                    <TextField
+                      fullWidth
+                      type="text"
+                      value={this.state.txtDes}
+                      onChange={(e) => {
+                        this.setState({ txtDes: e.target.value });
+                      }}
+                    />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
                   <TableCell></TableCell>
                   <TableCell>
                     <ButtonGroup variant="contained" color="primary">
@@ -110,8 +125,9 @@ class CategoryDetail extends Component {
   btnAddClick(e) {
     e.preventDefault();
     const name = this.state.txtName;
+    const des = this.state.txtDes;
     if (name) {
-      const cate = { name: name };
+      const cate = { name: name , des : des};
       this.apiPostCategory(cate);
     } else {
       alert("Please input name");
@@ -151,9 +167,11 @@ class CategoryDetail extends Component {
     e.preventDefault();
     const id = this.state.txtID;
     const name = this.state.txtName;
-    if (id && name) {
-      const cate = { name: name };
-      this.apiPutCategory(id, cate);
+    const des = this.state.txtDes;
+
+    if (id && name && des) {
+      const cate = { name: name , des : des};
+      this.apiPutCategory(id, cate ,des);
     } else {
       alert("Please input id and name");
     }

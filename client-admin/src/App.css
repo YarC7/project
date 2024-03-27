@@ -45,6 +45,10 @@ div.border-bottom {
   border-bottom: 1px solid black;
   padding: 10px 0px 10px 0px;
 }
+div.cate-div {
+  display: flex;
+  justify-content: space-evenly;
+}
 div.float-left {
   float: left;
 }
@@ -76,7 +80,7 @@ input.keyword {
 }
 /* header */
 tr:first-child.datatable {
-  background-color: #ffcc00;
+  background-color: white;
 }
 /* even rows, except header */
 tr:not(:first-child):nth-child(even).datatable {
@@ -84,7 +88,7 @@ tr:not(:first-child):nth-child(even).datatable {
 }
 /* odd rows, except header */
 tr:not(:first-child):nth-child(odd).datatable {
-  background-color: #ffeeaa;
+  background-color: white;
 }
 /* except header */
 tr:not(:first-child):hover.datatable {
