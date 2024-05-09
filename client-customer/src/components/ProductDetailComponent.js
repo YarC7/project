@@ -106,7 +106,7 @@ class ProductDetail extends Component {
                           startIcon={<AddShoppingCart />}
                           onClick={(e) => this.btnAdd2CartClick(e)}
                         >
-                          ADD TO CART
+                          Thêm vào danh sách yêu cầu
                         </Button>
                       </TableCell>
                     </TableRow>

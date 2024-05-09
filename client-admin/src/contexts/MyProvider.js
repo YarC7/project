@@ -8,13 +8,18 @@ class MyProvider extends Component {
       // variables
       token: '',
       username: '',
+      admin : null,
       // functions
+      setAdmin: this.setAdmin,
       setToken: this.setToken,
       setUsername: this.setUsername
     };
   }
   setToken = (value) => {
     this.setState({ token: value });
+  }
+  setAdmin = (value) => {
+    this.setState({ admin: value });
   }
   setUsername = (value) => {
     this.setState({ username: value });

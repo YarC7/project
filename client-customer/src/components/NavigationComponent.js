@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import MyContext from "../contexts/MyContext";
 import axios from "axios";
@@ -31,175 +31,204 @@ const StyledMenu = styled(Menu)({
   },
 });
 
-class NavigationComponent extends Component {
-  static contextType = MyContext;
+function NavigationComponent({ navigate }) {
+  const { token, customer, mycart } = useContext(MyContext);
+  const [categories, setCategories] = useState([]);
+  const [txtKeyword, setTxtKeyword] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorE2, setAnchorE2] = useState(null);
+  const [anchorE3, setAnchorE3] = useState(null);
+  const [open2, setOpen2] = useState(false);
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      categories: [],
-      txtKeyword: "",
-      anchorEl: null,
-    };
-  }
-
-  handleMenuOpen = (event) => {
-    this.setState({ anchorEl: event.currentTarget });
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
   };
 
-  handleMenuClose = () => {
-    this.setState({ anchorEl: null });
+  const handleMenuClose = () => {
+    setAnchorEl(null);
   };
 
-  render() {
-    const { token, customer, mycart } = this.context;
-    const { categories } = this.state;
+  useEffect(() => {
+    apiGetCategories();
+  }, []);
+  const open = Boolean(anchorE2);
 
-    const cates = categories.map((item) => {
-      return (
-        <MenuItem key={item._id} onClick={this.handleMenuClose}>
-          <Link
-            to={"/product/category/" + item._id}
-            style={{
-              textDecoration: "none",
-              color: "blue",
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center", py: 1 }}>
-              <span style={{ marginRight: "8px" }}>{item.name}</span>
-              <ArrowForwardIosIcon fontSize="small" />
-            </Box>
-          </Link>
-        </MenuItem>
-      );
-    });
+  const handleClick = (event) => {
+    setAnchorE2(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorE2(null);
+  };
 
-    return (
-      <AppBar position="sticky" color="primary">
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-              onClick={this.handleMenuOpen}
-            >
-              <MenuIcon />
-            </IconButton>
-            <StyledMenu
-              anchorEl={this.state.anchorEl}
-              open={Boolean(this.state.anchorEl)}
-              onClose={this.handleMenuClose}
-            >
-              {cates}
-            </StyledMenu>
-            <Link to="/" style={{ textDecoration: "none" }}>
-              <Typography
-                variant="h5"
-                component="div"
-                style={{ color: "white" }}
-              >
-                TechShop-PC
-              </Typography>
-            </Link>
-          </Box>
-
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            {token === "" ? (
-              <Stack direction="row" spacing={2}>
-                <Link to="/login" style={{ textDecoration: "none" }}>
-                  <Button style={{ color: "white" }}>Login</Button>
-                </Link>
-                <Link to="/signup" style={{ textDecoration: "none" }}>
-                  <Button style={{ color: "white" }}>Sign up</Button>
-                </Link>
-                <Link to="/active" style={{ textDecoration: "none" }}>
-                  <Button style={{ color: "white" }}>Active</Button>
-                </Link>
-              </Stack>
-            ) : (
-              <Stack direction="row" spacing={2} alignItems="center">
-                <Typography variant="body1" color="inherit" component="div">
-                  Hello{" "}
-                  <IconButton
-                    component={Link}
-                    to="/myprofile"
-                    color="inherit"
-                    size="small"
-                  >
-                    <AccountCircle />
-                  </IconButton>
-                  <Typography variant="subtitle1" component="span">
-                    {customer?.name}
-                  </Typography>
-                </Typography>
-                <Stack direction="row" spacing={2}>
-                  <IconButton
-                    component={Link}
-                    to="/myorders"
-                    color="inherit"
-                    size="small"
-                  >
-                    <Typography variant="body2" component="div">
-                      My Orders
-                    </Typography>
-                  </IconButton>
-                  <IconButton
-                    onClick={this.handleLogoutClick}
-                    color="inherit"
-                    size="small"
-                  >
-                    <Typography variant="body2" component="div">
-                      Logout
-                    </Typography>
-                  </IconButton>
-                </Stack>
-              </Stack>
-            )}
-            <IconButton color="inherit" onClick={this.handleSearchClick}>
-              <SearchIcon />
-            </IconButton>
-            <InputBase
-              placeholder="Search"
-              value={this.state.txtKeyword}
-              onChange={(e) => {
-                this.setState({ txtKeyword: e.target.value });
-              }}
-            />
-            <Link to="/mycart" style={{ textDecoration: "none" }}>
-              <IconButton color="inherit">
-                <Badge badgeContent={mycart.length} color="error">
-                  <ShoppingCart />
-                </Badge>
-              </IconButton>
-            </Link>
-          </Box>
-        </Toolbar>
-      </AppBar>
-    );
-  }
-
-  componentDidMount() {
-    this.apiGetCategories();
-  }
-
-  apiGetCategories() {
+  const handleClick2 = (event) => {
+    setAnchorE3(event.currentTarget);
+    setOpen2(true);
+  };
+  const handleClose2 = () => {
+    setOpen2(false);
+  };
+  const apiGetCategories = () => {
     axios.get("/api/customer/categories").then((res) => {
       const result = res.data;
-      this.setState({ categories: result });
+      setCategories(result);
     });
-  }
-
-  handleLogoutClick = () => {
-    this.context.setToken("");
-    this.context.setCustomer(null);
-    this.context.setMycart([]);
   };
 
-  handleSearchClick = () => {
-    this.props.navigate("/product/search/" + this.state.txtKeyword);
+  const cates = categories.map((item) => {
+    return (
+      <MenuItem key={item._id} onClick={handleMenuClose}>
+        <Link
+          to={"/product/category/" + item._id}
+          style={{
+            textDecoration: "none",
+            color: "black",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", py: 1 }}>
+            <span style={{ marginRight: "8px" }}>{item.name}</span>
+          </Box>
+        </Link>
+      </MenuItem>
+    );
+  });
+
+  const handleLogoutClick = () => {
+    sessionStorage.removeItem(token);
+    sessionStorage.removeItem(customer);
+    sessionStorage.removeItem(mycart);
   };
+
+  const handleSearchClick = () => {
+    navigate("/product/search/" + txtKeyword);
+  };
+
+  return (
+    <AppBar position="sticky" color="primary">
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <IconButton
+            edge="start"
+            color="inherit"
+            sx={{ mr: 2 }}
+            onClick={handleClick}
+            id="demo-positioned-button"
+            aria-controls={open ? 'demo-positioned-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? 'true' : undefined}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Menu
+                id="demo-positioned-menu"
+                aria-labelledby="demo-positioned-button"
+                anchorEl={anchorE2}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  'aria-labelledby': 'basic-button',
+                }}
+              >
+
+                <MenuItem onClick={handleClose}>
+                  <Button color="inherit" component={Link} to="/product/list">
+                    Danh sách Thiết bị
+                  </Button>
+                </MenuItem>
+                <MenuItem onClick={handleClose2}>
+                  <Button color="inherit"
+                           aria-controls={open2 ? 'demo-positioned-menu' : undefined}
+                           aria-haspopup="true"
+                           aria-expanded={open2 ? 'true' : undefined}
+                           onClick={handleClick2}>
+                    Danh sách Thiết bị theo danh mục
+                  </Button>
+                  {cates}
+                  
+                </MenuItem>
+                  
+              </Menu>
+
+          <Link to="/home" style={{ textDecoration: "none" }}>
+            <Typography
+              variant="h5"
+              component="div"
+              style={{ color: "white" }}
+            >
+              Home
+            </Typography>
+          </Link>
+        </Box>
+
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          {token === "" ? (
+            <Stack direction="row" spacing={2}>
+              <Link to="/login" style={{ textDecoration: "none" }}>
+                <Button style={{ color: "white" }}>Login</Button>
+              </Link>
+              <Link to="/signup" style={{ textDecoration: "none" }}>
+                <Button style={{ color: "white" }}>Sign up</Button>
+              </Link>
+            </Stack>
+          ) : (
+            <Stack direction="row" spacing={2} alignItems="center">
+              <Typography variant="body1" color="inherit" component="div">
+                Hello{" "}
+                <IconButton
+                  component={Link}
+                  to="/myprofile"
+                  color="inherit"
+                  size="small"
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Typography variant="subtitle1" component="span">
+                  {customer?.name}
+                </Typography>
+              </Typography>
+              <Stack direction="row" spacing={2}>
+                <IconButton
+                  component={Link}
+                  to="/myorders"
+                  color="inherit"
+                  size="small"
+                >
+                  <Typography variant="body2" component="div">
+                    Yêu cầu của tôi
+                  </Typography>
+                </IconButton>
+                <IconButton
+                  onClick={handleLogoutClick}
+                  color="inherit"
+                  size="small"
+                >
+                  <Typography variant="body2" component="div">
+                    Đăng xuất
+                  </Typography>
+                </IconButton>
+              </Stack>
+            </Stack>
+          )}
+          <IconButton color="inherit" onClick={handleSearchClick}>
+            <SearchIcon />
+          </IconButton>
+          <InputBase
+            placeholder="Search"
+            value={txtKeyword}
+            onChange={(e) => {
+              setTxtKeyword(e.target.value);
+            }}
+          />
+          <Link to="/mycart" style={{ textDecoration: "none" }}>
+            <IconButton color="inherit">
+              <Badge badgeContent={mycart.length} color="error">
+                <ShoppingCart />
+              </Badge>
+            </IconButton>
+          </Link>
+        </Box>
+      </Toolbar>
+    </AppBar>
+  );
 }
 
 export default withRouter(NavigationComponent);

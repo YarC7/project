@@ -30,5 +30,10 @@ const CategoryDAO = {
     const category = await Models.Category.findById(_id).exec();
     return category;
   },
+  async selectByKeyword(keyword) {
+    const query = { name: { $regex: new RegExp(keyword, "i") } };
+    const categories = await Models.Category.find(query).exec();
+    return categories;
+  },
 };
 module.exports = CategoryDAO;

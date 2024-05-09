@@ -10,17 +10,24 @@ export default function Footer() {
   return (
     <Box
       component="footer"
+      height={50}
+      padding={0}
+      bottom={0}
+      position={"fixed"}
+      width={"100%"}
       sx={{
         backgroundColor: (theme) =>
           theme.palette.mode === "light"
             ? theme.palette.grey[200]
             : theme.palette.grey[800],
         p: 6,
+        padding: 0,
+        margin : 0,
       }}
     >
-      <Container maxWidth="lg">
-        <Grid container spacing={5}>
-          <Grid item xs={12} sm={4}>
+      <Container>
+        <Grid container spacing={1}>
+          <Grid item xs={2} sm={4}>
             <Typography variant="h6" color="text.primary" gutterBottom>
               About Us
             </Typography>
@@ -29,7 +36,7 @@ export default function Footer() {
               customers.
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={2} sm={4}>
             <Typography variant="h6" color="text.primary" gutterBottom>
               Contact Us
             </Typography>
@@ -43,7 +50,7 @@ export default function Footer() {
               Phone: +1 234 567 8901
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={2} sm={4}>
             <Typography variant="h6" color="text.primary" gutterBottom>
               Follow Us
             </Typography>
@@ -62,7 +69,7 @@ export default function Footer() {
             </Link>
           </Grid>
         </Grid>
-        <Box mt={5}>
+        {/* <Box mt={5}>
           <Typography variant="body2" color="text.secondary" align="center">
             {"Copyright © "}
             <Link color="inherit" href="https://your-website.com/">
@@ -71,7 +78,7 @@ export default function Footer() {
             {new Date().getFullYear()}
             {"."}
           </Typography>
-        </Box>
+        </Box> */}
       </Container>
     </Box>
   );

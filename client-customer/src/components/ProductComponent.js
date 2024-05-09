@@ -53,7 +53,10 @@ class Product extends Component {
                   {item.name}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Price: {item.price} VNĐ
+                  Hàng: {item.brand}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Model: {item.model}
                 </Typography>
               </CardContent>
             </CardActionArea>

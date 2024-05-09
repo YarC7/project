@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Box, Card, Typography, Grid, TextField, Button , Stack} from '@mui/material';
 import axios from 'axios'; // Assuming axios is installed
 import { useNavigate } from "react-router-dom";
+import MyContext from "../contexts/MyContext";
+
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State to manage login status
+  const contextType = MyContext;
   const navigate = useNavigate();
   useEffect(() => {
     const storedToken = JSON.parse(sessionStorage.getItem('token'));
@@ -28,7 +31,9 @@ function Login() {
       if (result.success) {
         sessionStorage.setItem('token', JSON.stringify(result.token));
         sessionStorage.setItem('username', JSON.stringify(username));
+        sessionStorage.setItem('admin', JSON.stringify(result.admin));
         setIsLoggedIn(true);
+        
         window.location.href = '/admin';
       } else {
         alert(result.message);

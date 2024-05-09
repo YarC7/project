@@ -1,0 +1,97 @@
+# version: '3.8'
+# services:
+#   nodejs:
+#     build: 
+#       context: ./server
+#     volumes: 
+#       - ./server:/app
+#       - /app/node_modules
+#     ports: 
+#       - '3000:3000'
+#     container_name: server
+    
+#   react1:
+#     build: 
+#       context: ./client-admin
+#     ports: 
+#       - '3001:80'
+#     container_name: admin
+#     depends_on:
+#       - nodejs
+
+#   react2:
+#     build: 
+#       context: ./client-customer
+#     ports: 
+#       - '3002:80'
+#     container_name: customer
+#     depends_on:
+#       - nodejs
+version: '3'
+
+services: 
+
+  server:
+    build: 
+      context: server
+    container_name: server
+    working_dir: /usr/src/app
+    networks: 
+      - node-network
+    volumes: 
+      - ./server:/usr/src/app
+      - /usr/src/app/node_modules
+    tty: true
+    ports: 
+      - "3000:3000"
+    command: npm run start
+
+  admin:
+    build: 
+      context: client-admin
+    container_name: admin
+    working_dir: /usr/src/app
+    networks: 
+      - node-network
+    volumes: 
+      - ./client-admin:/usr/src/app
+      - /usr/src/app/node_modules
+    tty: true
+    ports: 
+      - "3001:3001"
+    command: npm run start
+
+  customer:
+    build: 
+      context: client-customer
+    container_name: customer
+    working_dir: /usr/src/app
+    networks: 
+      - node-network
+    volumes: 
+      - ./client-customer:/usr/src/app
+      - /usr/src/app/node_modules
+    tty: true
+    ports: 
+      - "3002:3002"
+    command: npm run start
+
+
+  nginx:
+    build: 
+      context: nginx
+    container_name: nginx
+    restart: always
+    tty: true
+    ports: 
+      - "8000:80"
+    networks: 
+      - node-network
+    depends_on:
+       - server
+       - admin
+       - customer
+  
+networks: 
+  node-network:
+    driver: bridge

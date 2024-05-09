@@ -26,5 +26,34 @@ const OrderDAO = {
     });
     return result;
   },
+  async selectByID(_id) {
+    const orders = await Models.Order.findById(_id).exec();
+    return orders;
+  },
+  async selectByKeyword(keyword) {
+    const query = { customer: { $regex: new RegExp(keyword, "i") } };
+    const orders = await Models.Order.find(query).exec();
+    return orders;
+  },
+  async sumOrderbyState(status) {
+    const query = {};
+    const orders = await Models.Order.find(query).exec();
+    let totalQuantity = 0;
+    for (const order of orders) {
+      if (order.status === status) {
+        totalQuantity += 1;
+      }
+    }
+    return totalQuantity;
+  },
+  async selectTopNew(top) {
+    const query = {};
+    const mysort = { cdate: -1 }; // descending
+    const orders = await Models.Order.find(query)
+      .sort(mysort)
+      .limit(top)
+      .exec();
+    return orders;
+  },
 };
 module.exports = OrderDAO;

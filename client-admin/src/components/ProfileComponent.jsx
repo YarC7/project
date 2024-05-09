@@ -1,19 +1,21 @@
-import React, { useState, useContext, useEffect } from "react";
+
+import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
-import MyContext from "../contexts/MyContext";
+
 import {
   Box,
-  Typography,
-  TextField,
   Button,
-  Grid,
   Paper,
+  Grid,
+  TextField,
+  Typography,
 } from "@mui/material";
 import axios from "axios";
 
 function Myprofile() {
-  const { customer, token, setCustomer } = useContext(MyContext);
-
+  const [ user, setUser ] = useState([]);
+  const token = useState("");
+  const [txtId , setId] = useState("");
   const [txtUsername, setTxtUsername] = useState("");
   const [txtPassword, setTxtPassword] = useState("");
   const [txtName, setTxtName] = useState("");
@@ -27,15 +29,20 @@ function Myprofile() {
     email: "",
   });
 
+  
+
   useEffect(() => {
-    if (customer) {
-      setTxtUsername(customer.username);
-      setTxtPassword(customer.password);
-      setTxtName(customer.name);
-      setTxtPhone(customer.phone);
-      setTxtEmail(customer.email);
+    const user = JSON.parse(sessionStorage.getItem("admin"))
+    let token = JSON.parse(sessionStorage.getItem("token"))
+    if (user) {
+      setId(user._id);
+      setTxtUsername(user.username);
+      setTxtPassword(user.password);
+      setTxtName(user.name);
+      setTxtPhone(user.phone);
+      setTxtEmail(user.email);
     }
-  }, [customer]);
+  }, [user]);
 
   const handleInputChange = (event) => {
     const target = event.target;
@@ -117,19 +124,20 @@ function Myprofile() {
         phone: txtPhone,
         email: txtEmail,
       };
-      apiPutCustomer(customer._id, updatedCustomer);
+      apiPutCustomer(txtId, updatedCustomer);
     }
   };
 
-  const apiPutCustomer = (id, customer) => {
-    const config = { headers: { "x-access-token": token } };
-    axios.put("/api/customer/customers/" + id, customer, config).then((res) => {
+  const apiPutCustomer = (id, user) => {
+    const config = { headers: { "x-access-token": JSON.parse(sessionStorage.getItem("token")) } };
+    axios.put("/api/admin/user/" + id, user, config).then((res) => {
       const result = res.data;
       if (result) {
         alert("OK BABY!");
-        setCustomer(result);
+        sessionStorage.setItem('admin', JSON.stringify(result))
       } else {
         alert("SORRY BABY!");
+        console.log(result);
       }
     });
   };
@@ -175,6 +183,7 @@ function Myprofile() {
                 helperText={error.password}
               />
               <TextField
+                focused
                 label="Name"
                 fullWidth
                 name="txtName"
@@ -185,6 +194,7 @@ function Myprofile() {
                 helperText={error.name}
               />
               <TextField
+                focused
                 label="Phone"
                 fullWidth
                 name="txtPhone"
@@ -196,7 +206,7 @@ function Myprofile() {
                 helperText={error.phone}
               />
               <TextField
-                disabled
+                focused
                 label="Email"
                 fullWidth
                 name="txtEmail"

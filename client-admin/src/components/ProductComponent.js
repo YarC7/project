@@ -1,153 +1,241 @@
 import axios from "axios";
-import React, { Component } from "react";
-import MyContext from "../contexts/MyContext";
+import React, { useState, useEffect ,forwardRef} from 'react';
 import ProductDetail from "./ProductDetailComponent";
+
+
 import {
   Box,
   CircularProgress,
   Pagination,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Typography,
+  InputBase,
+  IconButton,Modal
 } from "@mui/material";
+import {
+  Search as SearchIcon 
+} from "@mui/icons-material";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import {style } from "./TableComponent"
+import EnhancedTable from "./EnhancedTableComponent";
+import DataTableFilter from "./DataTableFilterComponent";
 
-class Product extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      products: [],
-      noPages: 0,
-      curPage: 1,
-      itemSelected: null,
-      loading: false, // Add loading state
-    };
-  }
-  render() {
-    // Render the loading circle if loading is true
-    if (this.state.loading) {
-      return (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-          }}
-        >
-          <CircularProgress />
-        </Box>
-      );
-    }
 
-    const prods = this.state.products.map((item) => {
-      return (
-        <TableRow
-          key={item._id}
-          sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-          hover
-          onClick={() => this.trItemClick(item)}
-        >
-          <TableCell>{item._id}</TableCell>
-          <TableCell>{item.name}</TableCell>
-          <TableCell>{item.price}</TableCell>
-          <TableCell>{new Date(item.cdate).toLocaleString()}</TableCell>
-          <TableCell>{item.category.name}</TableCell>
-          <TableCell>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <img
-                src={`data:image/jpg;base64,${item.image}`}
-                width="100px"
-                height="100px"
-                alt=""
-              />
-            </Box>
-          </TableCell>
-        </TableRow>
-      );
-    });
-    const handleChange = (event, value) => {
-      this.setState({ curPage: value, loading: true }); // Set loading to true before making the API request
-      this.apiGetProducts(value);
-    };
-    return (
-      <Box sx={{ display: "flex", flexDirection: "row", flex: "1 1 0" }}>
-        <Box sx={{ minWidth: "70%" }}>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              p: 2,
-            }}
-          >
-            <Typography variant="h4" gutterBottom>
-              PRODUCT LIST
-            </Typography>
-            <TableContainer component={Paper} sx={{ maxWidth: "80vw", my: 4 }}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>ID</TableCell>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Price</TableCell>
-                    <TableCell>Creation date</TableCell>
-                    <TableCell>Category</TableCell>
-                    <TableCell>Image</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>{prods}</TableBody>
-              </Table>
-            </TableContainer>
-            <Pagination
-              count={this.state.noPages}
-              page={this.state.curPage}
-              onChange={handleChange}
-            />
-          </Box>
-        </Box>
-        <Box sx={{ minWidth: "30%", width: "30%" }}>
-          <ProductDetail
-            item={this.state.itemSelected}
-            curPage={this.state.curPage}
-            updateProducts={this.updateProducts}
-          />
-        </Box>
-      </Box>
-    );
-  }
-  updateProducts = (products, noPages) => {
-    // arrow-function
-    this.setState({ products: products, noPages: noPages });
+
+
+const Product = (props) =>{
+  const [products, setProducts] = useState([]);
+  const [noPages, setNoPages] = useState(0);
+  const [curPage, setCurPage] = useState(1);
+  const [itemSelected, setItemSelected] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState(""); 
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const [filteredData, setFilteredData] = useState(products);
+  const categoryOptions = Array.from(
+    new Set(products.filter((row) => !row.headers).map((row) => row.category.name))
+  ).map((c) => ({ label: c, value: c }));
+
+  const handleChange = (event, value) => {
+    setLoading(true); // Set loading to true before making the API request
+    apiGetProducts(value);
+    setCurPage(curPage);
   };
-  componentDidMount() {
-    this.setState({ loading: true }); // Set loading to true before making the API request
-    this.apiGetProducts(this.state.curPage);
-  }
-  // event-handlers
-  trItemClick(item) {
-    this.setState({ itemSelected: item });
-  }
-  // apis
-  apiGetProducts(page) {
+
+  const updateProducts = (products, noPages) => {
+    setProducts(products);
+    setNoPages(noPages);
+  };
+
+  // const trItemClick = (item) => {
+  //   setItemSelected(item);
+  //   handleOpen();
+  // };
+  const handleRowClickFromB = (item) => {
+    setItemSelected(item);
+    handleOpen();
+  };
+  const handleSearchClick = () => {
+    if (searchKeyword){
+      apiGetProductsByKeyword(searchKeyword);
+    }
+    else {
+      apiGetProducts(1);
+    }
+  };
+
+  const apiGetProductsByKeyword = (keyword) => {
     const config = {
       headers: {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/products?page=" + page, config).then((res) => {
+    axios.get("/api/admin/products/search/" +keyword, config).then((res) => {
       const result = res.data;
-      this.setState({
-        products: result.products,
-        noPages: result.noPages,
-        curPage: result.curPage,
-        loading: false, // Set loading to false after the API request is completed
-      });
+      setProducts(result);
     });
-  }
-}
+  };
+
+  useEffect(() => {
+    setLoading(true); // Set loading to true before making the API request
+    apiGetProducts(curPage);
+  }, [curPage]); // Run on initial render and page change
+
+  const apiGetProducts = async (page) => {
+    const config = {
+      headers: {
+        "x-access-token": JSON.parse(sessionStorage.getItem("token")),
+      },
+    };
+    try {
+      const response = await axios.get("/api/admin/products?page=" + page, config);
+      const result = response.data;
+      updateProducts(result.products, result.noPages);
+    } catch (error) {
+      console.error(error); // Handle API request errors gracefully
+    } finally {
+      setLoading(false); // Set loading to false after the API request is completed
+    }
+  };
+
+  const headCells = [
+    {
+      id: "_id",
+      numeric: false,
+      disablePadding: true,
+      label: "ID"
+    },
+    { id: "name", numeric: false, disablePadding: false, label: "Name" },
+    { id: "price", numeric: false, disablePadding: false, label: "Price" },
+    { id: "category", numeric: false, disablePadding: false, label: "Category" },
+    { id: "image", numeric: false, disablePadding: false, label: "Image" },
+    { id: "brand", numeric: false, disablePadding: false, label: "Brand" },
+    { id: "model", numeric: false, disablePadding: false, label: "Model" },
+    { id: "quantity", numeric: false, disablePadding: false, label: "Quantity" },
+    { id: "state", numeric: false, disablePadding: false, label: "State" },
+    { id: "year", numeric: false, disablePadding: false, label: "Year" },
+    { id: "pdate", numeric: false, disablePadding: false, label: "PurchaseDate" },
+    { id: "warranty", numeric: false, disablePadding: false, label: "Warranty" },
+    { id: "description", numeric: false, disablePadding: false, label: "Description" },
+  ];  
+
+  return (
+    <Box sx={{ display: "flex", flexDirection: "row", flex: "1 1 0" }}>
+      <Box sx={{ minWidth: "100%" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", p: 2 }}>
+          <Typography variant="h4" gutterBottom>
+            PRODUCT LIST
+          </Typography>
+          
+          <Typography variant="h4" gutterBottom>
+            <Box sx={{ border: "2px solid grey" , borderRadius : "16px",maxWidth: "450px", margin : "auto", mt : 4}}>
+                <IconButton color="inherit" onClick={() => handleSearchClick()}>
+                  <SearchIcon />
+                </IconButton>
+                <InputBase
+                  placeholder="Search"
+                  value={searchKeyword}
+                  onChange={(e) => setSearchKeyword(e.target.value)}
+                />
+              </Box>
+          </Typography>
+          <IconButton color="inherit" onClick={() => handleOpen()}>
+              <AddCircleIcon /> Add new Device
+          </IconButton>
+          
+          {loading ? (
+            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+              <CircularProgress />
+            </Box>
+          ) : (
+            <Box>
+              <DataTableFilter
+                rows={products}
+                setFilteredData={setFilteredData}
+                categoryOptions={categoryOptions}
+                initialFilters={{
+                  name: "",
+                  brand: "",
+                  model: "",
+                  category: [],
+                }}
+                filterKeys={["name", "brand", "model"]}
+              />
+              <EnhancedTable rows={filteredData} headCells={headCells} onRowClick={handleRowClickFromB} name={"product"}/>
+            </Box>
+            // <TableContainer component={Paper} sx={{ maxWidth: "80vw", my: 4,borderRadius: '16px' ,border: '2px solid grey'}}>
+            //   <Table>
+            //     <TableHead>
+            //       <TableRow>
+            //         <StyledTableCell>ID</StyledTableCell>
+            //         <StyledTableCell>Name</StyledTableCell>
+            //         <StyledTableCell>Brand</StyledTableCell>
+            //         <StyledTableCell>Model</StyledTableCell>
+            //         <StyledTableCell>Quantity</StyledTableCell>
+            //         <StyledTableCell>State</StyledTableCell>
+            //         <StyledTableCell>Year</StyledTableCell>
+            //         <StyledTableCell>Warranty</StyledTableCell>
+            //         <StyledTableCell>Purchase date</StyledTableCell>
+            //         <StyledTableCell>Description</StyledTableCell>
+            //         <StyledTableCell>Price</StyledTableCell>
+            //         <StyledTableCell>Creation date</StyledTableCell>
+            //         <StyledTableCell>Category</StyledTableCell>
+            //         <StyledTableCell>Image</StyledTableCell>
+            //       </TableRow>
+            //     </TableHead>
+            //     <TableBody>
+            //       {products.map((item) => (
+            //         <StyledTableRow key={item._id} hover onClick={() => trItemClick(item)}>
+            //           <TableCell>{item._id}</TableCell>
+            //           <TableCell>{item.name}</TableCell>
+            //           <TableCell>{item.brand}</TableCell>
+            //           <TableCell>{item.model}</TableCell>
+            //           <TableCell>{item.quantity}</TableCell>
+            //           <TableCell>{item.state === 1 ? "Ok" : "not Ok"}</TableCell>
+            //           <TableCell>{item.year}</TableCell>
+            //           <TableCell>{item.warranty}</TableCell>
+            //           <TableCell>{item.pdate} ngay mua</TableCell>
+
+            //           <TableCell>{item.description}</TableCell>
+            //           <TableCell>{item.price} VND</TableCell>
+            //           <TableCell>{new Date(item.cdate).toLocaleString()}</TableCell>
+            //           <TableCell>{item.category.name}</TableCell>
+            //           <TableCell>
+            //             <Box sx={{ display: "flex", alignItems: "center" }}>
+            //               <img src={`data:image/jpg;base64,${item.image}`} width="100px" height="100px" alt="" />
+            //             </Box>
+            //           </TableCell>
+            //         </StyledTableRow>
+            //       ))}
+            //     </TableBody>
+            //   </Table>
+            // </TableContainer>
+
+          )}
+          <Pagination count={noPages} page={curPage} onChange={handleChange} />
+        </Box>
+        <Box sx={{ minWidth: "70%" }}>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <ProductDetail item={itemSelected} curPage={curPage} updateProducts={updateProducts}  />
+            </Box>
+          </Modal>
+        </Box>
+        
+      </Box>
+      {/* <Box sx={{ minWidth: "30%", width: "30%" }}>
+        <ProductDetail item={itemSelected} curPage={curPage} updateProducts={updateProducts} />
+      </Box> */}
+    </Box>
+  );
+};
+
 export default Product;

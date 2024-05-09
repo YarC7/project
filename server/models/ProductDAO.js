@@ -20,7 +20,15 @@ const ProductDAO = {
   async update(product) {
     const newvalues = {
       name: product.name,
+      brand: product.brand,
+      model: product.model,
       price: product.price,
+      quantity: product.quantity,
+      state: product.state,
+      year: product.year,
+      pdate: product.pdate,
+      warranty: product.warranty,
+      description: product.description,
       image: product.image,
       category: product.category,
     };
@@ -70,6 +78,26 @@ const ProductDAO = {
     const query = { name: { $regex: new RegExp(keyword, "i") } };
     const products = await Models.Product.find(query).exec();
     return products;
+  },
+  async sumProductbyState(state) {
+    const query = {};
+    const products = await Models.Product.find(query).exec();
+    let totalQuantity = 0;
+    for (const product of products) {
+      if (product.state === state) {
+        totalQuantity += product.quantity;
+      }
+    }
+    return totalQuantity;
+  },
+  async sumProductbyQuantity() {
+    const query = {};
+    const products = await Models.Product.find(query).exec();
+    let totalQuantity = 0;
+    for (const product of products) {
+      totalQuantity += product.quantity;
+    }
+    return totalQuantity;
   },
 };
 module.exports = ProductDAO;

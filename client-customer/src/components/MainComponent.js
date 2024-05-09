@@ -11,6 +11,7 @@ import Myprofile from "./MyProfileComponent";
 import Mycart from "./MyCartComponent";
 import Myorders from "./MyOrderComponent";
 import { Container } from "@mui/material";
+import ListProduct from "./ListProductComponent";
 
 class Main extends Component {
   render() {
@@ -18,9 +19,10 @@ class Main extends Component {
       <Container maxWidth="lg">
         <NavigationComponent />
         <Routes>
-          <Route path="/" element={<Navigate replace to="/home" />} />
+          <Route path="/" element={<Navigate replace to="/login" />} />
           <Route path="/home" element={<Home />} />
           <Route path="/product/category/:cid" element={<Product />} />
+          <Route path="/product/list" element={<ListProduct />} />
           <Route path="/product/search/:keyword" element={<Product />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/signup" element={<Signup />} />

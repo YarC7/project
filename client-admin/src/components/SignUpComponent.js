@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 import {
   Box,
   Typography,
@@ -25,6 +27,7 @@ const Signup = ({ history }) => {
       email: "",
     },
   });
+  const navigate = useNavigate();
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -102,7 +105,7 @@ const Signup = ({ history }) => {
       const result = res.data;
       if (result.success) {
         alert(result.message);
-        history.push("/login");
+        
       } else {
         alert(result.message);
       }

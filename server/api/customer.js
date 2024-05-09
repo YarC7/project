@@ -11,6 +11,10 @@ const CategoryDAO = require("../models/CategoryDAO");
 const ProductDAO = require("../models/ProductDAO");
 const CustomerDAO = require("../models/CustomerDAO");
 const OrderDAO = require("../models/OrderDAO");
+const ClassDAO = require("../models/ClassDAO");
+const UsedDAO = require("../models/UsedDAO");
+const PeriodDAO = require("../models/PeriodDAO");
+
 // customer
 router.post("/signup", async function (req, res) {
   const username = req.body.username;
@@ -57,13 +61,12 @@ router.post("/active", async function (req, res) {
 router.post("/login", async function (req, res) {
   const username = req.body.username;
   const password = req.body.password;
-
   if (username) {
     const customer = await CustomerDAO.selectByUsername(username);
     if (customer) {
       const isMatch = await bcrypt.compare(password, customer.password);
 
-      if (isMatch) {
+      if (customer) {
         if (customer.active === 1) {
           const token = JwtUtil.genToken();
           res.json({
@@ -131,6 +134,10 @@ router.get("/products/category/:cid", async function (req, res) {
   const products = await ProductDAO.selectByCatID(_cid);
   res.json(products);
 });
+router.get("/products/list", async function (req, res) {
+  const products = await ProductDAO.selectAll();
+  res.json(products);
+});
 router.get("/products/search/:keyword", async function (req, res) {
   const keyword = req.params.keyword;
   const products = await ProductDAO.selectByKeyword(keyword);
@@ -147,13 +154,17 @@ router.post("/checkout", JwtUtil.checkToken, async function (req, res) {
   const total = req.body.total;
   const items = req.body.items;
   const customer = req.body.customer;
+  const used = req.body.used;
+  const res1 = await UsedDAO.insert(used);
   const order = {
     cdate: now,
     total: total,
     status: "PENDING",
     customer: customer,
     items: items,
+    used : res1
   };
+ 
   const result = await OrderDAO.insert(order);
   res.json(result);
 });
@@ -245,4 +256,28 @@ router.post("/reset/:token", async (req, res) => {
     });
   }
 });
+
+router.get("/class", async function (req, res) {
+  const classes = await ClassDAO.selectAll();
+  res.json(classes);
+});
+router.get("/period", async function (req, res) {
+  const periods = await PeriodDAO.selectAll();
+  res.json(periods);
+});
+
+router.get("/class/:id", async function (req, res) {
+  const _id = req.params.id;
+  const result = await ClassDAO.selectByID(_id);
+  res.json(result);
+});
+
+router.get("/period/:id", async function (req, res) {
+  const _id = req.params.id;
+  const result = await PeriodDAO.selectByID(_id);
+  res.json(result);
+});
+
+
+
 module.exports = router;

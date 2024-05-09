@@ -1,53 +1,58 @@
-import axios from "axios";
-import React, { Component } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Navigate } from "react-router-dom";
 import MyContext from "../contexts/MyContext";
 import { Box, Typography, TextField, Button, Grid, Paper } from "@mui/material";
+import axios from "axios";
 
-class Myprofile extends Component {
-  static contextType = MyContext; // using this.context to access global state
-  constructor(props) {
-    super(props);
-    this.state = {
-      txtUsername: "",
-      txtPassword: "",
-      txtName: "",
-      txtPhone: "",
-      txtEmail: "",
-      error: {
-        username: "",
-        password: "",
-        name: "",
-        phone: "",
-        email: "",
-      },
-    };
-  }
+const MyProfile = () => {
+  const { customer, token, setCustomer } = useContext(MyContext);
+  const [txtUsername, setTxtUsername] = useState("");
+  const [txtPassword, setTxtPassword] = useState("");
+  const [txtName, setTxtName] = useState("");
+  const [txtPhone, setTxtPhone] = useState("");
+  const [txtEmail, setTxtEmail] = useState("");
+  const [error, setError] = useState({
+    username: "",
+    password: "",
+    name: "",
+    phone: "",
+    email: "",
+  });
 
-  componentDidMount() {
-    if (this.context.customer) {
-      this.setState({
-        txtUsername: this.context.customer.username,
-        txtPassword: this.context.customer.password,
-        txtName: this.context.customer.name,
-        txtPhone: this.context.customer.phone,
-        txtEmail: this.context.customer.email,
-      });
+  useEffect(() => {
+    if (customer) {
+      setTxtUsername(customer.username);
+      setTxtPassword(customer.password);
+      setTxtName(customer.name);
+      setTxtPhone(customer.phone);
+      setTxtEmail(customer.email);
     }
-  }
+  }, [customer]);
 
-  handleInputChange = (event) => {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-
-    // Update state with new input
-    this.setState({
-      [name]: value,
-    });
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    switch (name) {
+      case "txtUsername":
+        setTxtUsername(value);
+        break;
+      case "txtPassword":
+        setTxtPassword(value);
+        break;
+      case "txtName":
+        setTxtName(value);
+        break;
+      case "txtPhone":
+        setTxtPhone(value);
+        break;
+      case "txtEmail":
+        setTxtEmail(value);
+        break;
+      default:
+        break;
+    }
   };
 
-  validate = () => {
+  const validate = () => {
     let isError = false;
     const errors = {
       username: "",
@@ -56,9 +61,6 @@ class Myprofile extends Component {
       phone: "",
       email: "",
     };
-
-    const { txtUsername, txtPassword, txtName, txtPhone, txtEmail } =
-      this.state;
 
     if (!txtUsername) {
       isError = true;
@@ -88,129 +90,128 @@ class Myprofile extends Component {
       errors.email = "Invalid email format";
     }
 
-    this.setState({
-      error: errors,
-    });
+    setError(errors);
 
     return isError;
   };
 
-  onSubmit = (event) => {
+  const onSubmit = (event) => {
     event.preventDefault();
-    const err = this.validate();
+    const err = validate();
     if (!err) {
-      const customer = {
-        username: this.state.txtUsername,
-        password: this.state.txtPassword,
-        name: this.state.txtName,
-        phone: this.state.txtPhone,
-        email: this.state.txtEmail,
+      const updatedCustomer = {
+        username: txtUsername,
+        password: txtPassword,
+        name: txtName,
+        phone: txtPhone,
+        email: txtEmail,
       };
-      this.apiPutCustomer(this.context.customer._id, customer);
+      apiPutCustomer(customer._id, updatedCustomer);
     }
   };
 
-  apiPutCustomer = (id, customer) => {
-    const config = { headers: { "x-access-token": this.context.token } };
-    axios.put("/api/customer/customers/" + id, customer, config).then((res) => {
-      const result = res.data;
-      if (result) {
-        alert("OK BABY!");
-        this.context.setCustomer(result);
-      } else {
-        alert("SORRY BABY!");
-      }
-    });
+  const apiPutCustomer = (id, updatedCustomer) => {
+    const config = { headers: { "x-access-token": token } };
+    axios
+      .put(`/api/customer/customers/${id}`, updatedCustomer, config)
+      .then((res) => {
+        const result = res.data;
+        if (result) {
+          alert("OK BABY!");
+          setCustomer(result);
+        } else {
+          alert("SORRY BABY!");
+        }
+      });
   };
 
-  render() {
-    if (this.context.token === "") return <Navigate replace to="/login" />;
-    return (
-      <Box sx={{ mt: 4 }}>
-        <Grid container justifyContent="center">
-          <Grid item xs={12} md={6}>
-            <Paper
-              sx={{
-                padding: 3,
-                marginTop: 3,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <Typography variant="h4" align="center" sx={{ mb: 4 }}>
-                MY PROFILE
-              </Typography>
-              <Box component="form" onSubmit={this.onSubmit} sx={{ mt: 3 }}>
-                <TextField
-                  label="Username"
-                  fullWidth
-                  name="txtUsername"
-                  value={this.state.txtUsername}
-                  onChange={this.handleInputChange}
-                  margin="normal"
-                  error={this.state.error.username !== ""}
-                  helperText={this.state.error.username}
-                />
-                <TextField
-                  label="Password"
-                  fullWidth
-                  name="txtPassword"
-                  type="password"
-                  value={this.state.txtPassword}
-                  onChange={this.handleInputChange}
-                  margin="normal"
-                  error={this.state.error.password !== ""}
-                  helperText={this.state.error.password}
-                />
-                <TextField
-                  label="Name"
-                  fullWidth
-                  name="txtName"
-                  value={this.state.txtName}
-                  onChange={this.handleInputChange}
-                  margin="normal"
-                  error={this.state.error.name !== ""}
-                  helperText={this.state.error.name}
-                />
-                <TextField
-                  label="Phone"
-                  fullWidth
-                  name="txtPhone"
-                  type="tel"
-                  value={this.state.txtPhone}
-                  onChange={this.handleInputChange}
-                  margin="normal"
-                  error={this.state.error.phone !== ""}
-                  helperText={this.state.error.phone}
-                />
-                <TextField
-                  disabled
-                  label="Email"
-                  fullWidth
-                  name="txtEmail"
-                  type="email"
-                  value={this.state.txtEmail}
-                  onChange={this.handleInputChange}
-                  margin="normal"
-                  error={this.state.error.email !== ""}
-                  helperText={this.state.error.email}
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                  UPDATE
-                </Button>
-              </Box>
-            </Paper>
-          </Grid>
-        </Grid>
-      </Box>
-    );
-  }
-}
+  if (token === "") return <Navigate replace to="/login" />;
 
-export default Myprofile;
+  return (
+    <Box sx={{ mt: 4 }}>
+      <Grid container justifyContent="center">
+        <Grid item xs={12} md={6}>
+          <Paper
+            sx={{
+              padding: 3,
+              marginTop: 3,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="h4" align="center" sx={{ mb: 4 }}>
+              MY PROFILE
+            </Typography>
+            <Box component="form" onSubmit={onSubmit} sx={{ mt: 3 }}>
+              <TextField
+                label="Username"
+                fullWidth
+                name="txtUsername"
+                value={txtUsername}
+                onChange={handleInputChange}
+                margin="normal"
+                error={error.username !== ""}
+                helperText={error.username}
+              />
+              <TextField
+                label="Password"
+                fullWidth
+                name="txtPassword"
+                type="password"
+                value={txtPassword}
+                onChange={handleInputChange}
+                margin="normal"
+                error={error.password !== ""}
+                helperText={error.password}
+              />
+              <TextField
+                label="Name"
+                fullWidth
+                name="txtName"
+                value={txtName}
+                onChange={handleInputChange}
+                margin="normal"
+                error={error.name !== ""}
+                helperText={error.name}
+              />
+              <TextField
+                label="Phone"
+                fullWidth
+                name="txtPhone"
+                type="tel"
+                value={txtPhone}
+                onChange={handleInputChange}
+                margin="normal"
+                error={error.phone !== ""}
+                helperText={error.phone}
+              />
+              <TextField
+                disabled
+                label="Email"
+                fullWidth
+                name="txtEmail"
+                type="email"
+                value={txtEmail}
+                onChange={handleInputChange}
+                margin="normal"
+                error={error.email !== ""}
+                helperText={error.email}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                UPDATE
+              </Button>
+            </Box>
+          </Paper>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+};
+
+export default MyProfile;

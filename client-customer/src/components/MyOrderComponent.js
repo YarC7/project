@@ -37,6 +37,7 @@ class Myorders extends Component {
           <TableCell>{item._id}</TableCell>
           <TableCell>{new Date(item.cdate).toLocaleString()}</TableCell>
           <TableCell>{item.customer.name}</TableCell>
+          <TableCell>{item.customer.name}</TableCell>
           <TableCell>{item.customer.phone}</TableCell>
           <TableCell>{item.total}</TableCell>
           <TableCell>{item.status}</TableCell>
@@ -64,22 +65,38 @@ class Myorders extends Component {
           </TableRow>
         );
       });
+    };
+    if (this.state.order) {
+      var used = this.state.order.used;
+      var usedDetails = []; // Mảng để lưu trữ thông tin của used
+      if (used) { // Kiểm tra xem used có tồn tại không
+        usedDetails.push(
+          <TableRow key="usedDetails"> {/* Sử dụng key để tránh lỗi */}
+            <TableCell>{used.purpose}</TableCell>
+            <TableCell>{"Phòng: "+used.classes?.zone +used.classes?.stair+ "." + used.classes?.room+ " - " +"Cơ sở : "+ used.classes?.building }</TableCell>
+            <TableCell>{"Tiết :"+ used.period?.index+ " từ " + used.period?.from + " đến " +used.period?.to}</TableCell>
+            <TableCell>{used.des}</TableCell>
+          </TableRow>
+        );
+      }
     }
     return (
       <div>
+        <br/>
         <Typography variant="h4" align="center">
-          ORDER LIST
+          Danh sách các yêu cầu
         </Typography>
         <TableContainer component={Paper}>
           <MyTable>
             <TableHead>
               <TableRow>
                 <TableCell>ID</TableCell>
-                <TableCell>Creation date</TableCell>
-                <TableCell>Cust.name</TableCell>
-                <TableCell>Cust.phone</TableCell>
-                <TableCell>Total</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell>Ngày tạo</TableCell>
+                <TableCell>Mã giảng viên</TableCell>
+                <TableCell>Tên giảng viên</TableCell>
+                <TableCell>Só điện thoại</TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>Tình trạng</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>{orders}</TableBody>
@@ -91,8 +108,11 @@ class Myorders extends Component {
           </div>
         ) : this.state.order ? (
           <div>
+            <br/>
+            <br/>
+            <br/>
             <Typography variant="h4" align="center">
-              ORDER DETAIL
+              Chi tiết yêu cầu
             </Typography>
             <TableContainer component={Paper}>
               <MyTable>
@@ -102,12 +122,31 @@ class Myorders extends Component {
                     <TableCell>Prod.ID</TableCell>
                     <TableCell>Prod.name</TableCell>
                     <TableCell>Image</TableCell>
-                    <TableCell>Price</TableCell>
+                    <TableCell>Brand</TableCell>
                     <TableCell>Quantity</TableCell>
-                    <TableCell>Amount</TableCell>
+                    <TableCell>Model</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>{items}</TableBody>
+              </MyTable>
+            </TableContainer>
+            <br/>
+            <br/>
+            <br/>
+            <Typography variant="h4" align="center">
+              Chi tiết sử dụng
+            </Typography>
+            <TableContainer component={Paper}>
+              <MyTable>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Mục đích</TableCell>
+                    <TableCell>Nơi sử dụng</TableCell>
+                    <TableCell>Thời gian sử dụng</TableCell>
+                    <TableCell>Ghi chú</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>{usedDetails}</TableBody>
               </MyTable>
             </TableContainer>
           </div>

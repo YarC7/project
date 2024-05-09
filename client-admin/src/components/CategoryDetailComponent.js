@@ -40,13 +40,13 @@ class CategoryDetail extends Component {
   render() {
     return (
       <div className="float-right">
-        <Box mt={2} mb={2}>
+        <Box mt={5} mb={2}>
           <Typography variant="h5" align="center">
             CATEGORY DETAIL
           </Typography>
         </Box>
         <form>
-          <TableContainer component={Paper} sx={{ border: "1px solid grey" }}>
+          <TableContainer component={Paper} sx={{ border: "2px solid grey" , borderRadius : "16px" , mt : "134px"}}>
             <Table>
               <TableBody>
                 <TableRow>

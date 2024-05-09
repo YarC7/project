@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { Component } from "react";
+import { useContext, useState } from "react";
 import MyContext from "../contexts/MyContext";
 import CartUtil from "../utils/CartUtil";
 import {
@@ -13,9 +13,11 @@ import {
   Paper,
   Typography,
   CircularProgress,
+  Box, Modal
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import withRouter from "../utils/withRouter";
+import UsedDetail from "./UsedDetailComponent";
 
 const MyTable = styled(Table)({
   minWidth: 650,
@@ -29,139 +31,159 @@ const MyButton = styled(Button)({
   },
 });
 
-class Mycart extends Component {
-  static contextType = MyContext; // using this.context to access global state
+const Mycart = ({ navigate }) => {
+  const { mycart, setMycart, token, customer,used , setUsed } = useContext(MyContext);
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: false, // Add loading state
-    };
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 800,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+  const lnkRemoveClick = (id) => {
+    const updatedCart = mycart.filter((item) => item.product._id !== id);
+    setMycart(updatedCart);
+  };
+
+  const openUsedModal = () =>{
+    handleOpen();
   }
 
-  render() {
-    const mycart = this.context.mycart.map((item, index) => {
-      return (
-        <TableRow key={item.product._id}>
-          <TableCell>{index + 1}</TableCell>
-          <TableCell>{item.product._id}</TableCell>
-          <TableCell>{item.product.name}</TableCell>
-          <TableCell>{item.product.category.name}</TableCell>
-          <TableCell>
-            <img
-              src={"data:image/jpg;base64," + item.product.image}
-              width="70px"
-              height="70px"
-              alt=""
-            />
-          </TableCell>
-          <TableCell>{item.product.price}</TableCell>
-          <TableCell>{item.quantity}</TableCell>
-          <TableCell>{item.product.price * item.quantity}</TableCell>
-          <TableCell>
-            <MyButton
-              variant="contained"
-              disableElevation
-              onClick={() => this.lnkRemoveClick(item.product._id)}
-            >
-              Remove
-            </MyButton>
-          </TableCell>
-        </TableRow>
-      );
-    });
-
-    return (
-      <div>
-        <Typography variant="h4" align="center">
-          ITEM LIST
-        </Typography>
-        <TableContainer component={Paper}>
-          <MyTable>
-            <TableHead>
-              <TableRow>
-                <TableCell>No.</TableCell>
-                <TableCell>ID</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Image</TableCell>
-                <TableCell>Price</TableCell>
-                <TableCell>Quantity</TableCell>
-                <TableCell>Amount</TableCell>
-                <TableCell>Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {mycart}
-              <TableRow>
-                <TableCell colSpan="6" />
-                <TableCell>Total</TableCell>
-                <TableCell>{CartUtil.getTotal(this.context.mycart)}</TableCell>
-                <TableCell>
-                  {this.state.loading ? ( // Render the loading circle if loading is true
-                    <CircularProgress />
-                  ) : (
-                    <MyButton
-                      variant="contained"
-                      disableElevation
-                      onClick={() => this.lnkCheckoutClick()}
-                    >
-                      CHECKOUT
-                    </MyButton>
-                  )}
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </MyTable>
-        </TableContainer>
-      </div>
-    );
-  }
-
-  lnkRemoveClick(id) {
-    const mycart = this.context.mycart;
-    const index = mycart.findIndex((x) => x.product._id === id);
-    if (index !== -1) {
-      // found, remove item
-      mycart.splice(index, 1);
-      this.context.setMycart(mycart);
-    }
-  }
-
-  lnkCheckoutClick() {
-    if (window.confirm("ARE YOU SURE?")) {
-      if (this.context.mycart.length > 0) {
-        const total = CartUtil.getTotal(this.context.mycart);
-        const items = this.context.mycart;
-        const customer = this.context.customer;
-        if (customer) {
-          this.setState({ loading: true }); // Set loading to true before making the API request
-          this.apiCheckout(total, items, customer);
+  const lnkCheckoutClick = () => {
+    if (used){
+      console.log(used);
+      console.log(mycart);
+      if (window.confirm("ARE YOU SURE?")) {
+        if (mycart.length > 0) {
+          const total = CartUtil.getTotal(mycart);
+          const items = mycart;
+          if (customer) {
+            setLoading(true);
+            apiCheckout(total, items, customer,used);
+          } else {
+            navigate("/login");
+          }
         } else {
-          this.props.navigate("/login");
+          alert("Your cart is empty");
         }
-      } else {
-        alert("Your cart is empty");
       }
     }
-  }
+    else {
+      handleOpen();
+    }
+    
+  };
 
-  // apis
-  apiCheckout(total, items, customer) {
-    const body = { total: total, items: items, customer: customer };
-    const config = { headers: { "x-access-token": this.context.token } };
+  const apiCheckout = (total, items, customer,used) => {
+    const body = { total: total, items: items, customer: customer , used : used };
+    const config = { headers: { "x-access-token": token } };
     axios.post("/api/customer/checkout", body, config).then((res) => {
       const result = res.data;
-      this.setState({ loading: false }); // Set loading to false after the API request is completed
+      setLoading(false);
       if (result) {
         alert("OK BABY!");
-        this.context.setMycart([]);
-        this.props.navigate("/home");
+        setMycart([]);
+        setUsed(null);
+        navigate("/home");
       } else {
         alert("SORRY BABY!");
       }
     });
-  }
-}
+  };
+
+  return (
+    <div>
+      <Typography variant="h4" align="center">
+        ITEM LIST
+      </Typography>
+      <TableContainer component={Paper}>
+        <MyTable>
+          <TableHead>
+            <TableRow>
+              <TableCell>No.</TableCell>
+              <TableCell>ID</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Category</TableCell>
+              <TableCell>Image</TableCell>
+              <TableCell>Price</TableCell>
+              <TableCell>Quantity</TableCell>
+              <TableCell>Amount</TableCell>
+              <TableCell>Action</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {mycart.map((item, index) => (
+              <TableRow key={item.product._id}>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>{item.product._id}</TableCell>
+                <TableCell>{item.product.name}</TableCell>
+                <TableCell>{item.product.category.name}</TableCell>
+                <TableCell>
+                  <img
+                    src={"data:image/jpg;base64," + item.product.image}
+                    width="70px"
+                    height="70px"
+                    alt=""
+                  />
+                </TableCell>
+                <TableCell>{item.product.price}</TableCell>
+                <TableCell>{item.quantity}</TableCell>
+                <TableCell>{item.product.price * item.quantity}</TableCell>
+                <TableCell>
+                  <MyButton
+                    variant="contained"
+                    disableElevation
+                    onClick={() => lnkRemoveClick(item.product._id)}
+                  >
+                    Remove
+                  </MyButton>
+                </TableCell>
+              </TableRow>
+            ))}
+            <TableRow>
+              <TableCell colSpan="6" />
+              <TableCell>Total</TableCell>
+              <TableCell>{CartUtil.getTotal(mycart)}</TableCell>
+              <TableCell>
+                {loading ? (
+                  <CircularProgress />
+                ) : (
+                  <MyButton
+                    variant="contained"
+                    disableElevation
+                    onClick={lnkCheckoutClick}
+                  >
+                    CHECKOUT
+                  </MyButton>
+                )}
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </MyTable>
+      </TableContainer>
+      <Box sx={{ minWidth: "70%" }}>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <UsedDetail/>
+            </Box>
+          </Modal>
+        </Box>
+    </div>
+  );
+};
 
 export default withRouter(Mycart);
