@@ -40,12 +40,12 @@ const Demo = (props) => {
       },
     };
     try {
-      const response = await axios.get("/api/admin/devices", config);
-      const response2 = await axios.get("/api/admin/categories", config);
-      const response3 = await axios.get("/api/admin/orders", config);
-      const response4 = await axios.get("/api/admin/devices/sum", config);
-      const response5 = await axios.get("/api/admin/orders/sum", config);
-      const response6 = await axios.get("/api/admin/orders/hot", config);
+      const response = await axios.get("http://localhost:3000/api/admin/devices", config);
+      const response2 = await axios.get("http://localhost:3000/api/admin/categories", config);
+      const response3 = await axios.get("http://localhost:3000/api/admin/orders", config);
+      const response4 = await axios.get("http://localhost:3000/api/admin/devices/sum", config);
+      const response5 = await axios.get("http://localhost:3000/api/admin/orders/sum", config);
+      const response6 = await axios.get("http://localhost:3000/api/admin/orders/hot", config);
       const result = response.data;
       const result2 = response2.data;
       const result3 = response3.data;
@@ -75,7 +75,7 @@ const Demo = (props) => {
       },
     };
     try {
-      const response = await axios.get("/api/admin/export", config);
+      const response = await axios.get("http://localhost:3000/api/admin/export", config);
     } catch (error) {
       console.error(error); // Handle API request errors gracefully
     }

@@ -99,6 +99,7 @@ router.put("/user/:id", JwtUtil.checkToken, async function (req, res) {
 router.post("/login", async function (req, res) {
   const username = req.body.username;
   const password = req.body.password;
+  console.log(JSON.stringify(req.headers));
   if (username && password) {
     const admin = await AdminDAO.selectByUsernameAndPassword(
       username,
@@ -110,7 +111,6 @@ router.post("/login", async function (req, res) {
         success: true,
         message: "Authentication successful",
         token: token,
-        admin : admin,
       });
     } else {
       res.json({ success: false, message: "Incorrect username or password" });
@@ -389,16 +389,17 @@ router.get("/bill", JwtUtil.checkToken, async function (req, res) {
 });
 router.post("/bill", JwtUtil.checkToken, async function (req, res) {
   const producer = req.body.producer;
-  const quantity = req.body.quantity;
+  const quantities = req.body.quantities;
   const code = req.body.code;
-  const pid = req.body.device;
-
-  const product = await ProductDAO.selectByID(pid);
+  const product = req.body.device;
   const tprice = req.body.tprice;
-  const price = req.body.price;
+  const prices = req.body.prices;
   const cdate = req.body.cdate;
-  const year = req.body.year;
-  const bill = {  product : product ,code : code,producer: producer , quantity: quantity ,tprice: tprice, price : price  , cdate:cdate , year: year};
+  const pid = req.body.pid;
+  // console.log(prices);
+  // console.log(quantities);
+  const bill = {  product : product ,code : code,producer: producer , quantities: quantities ,pid:pid,tprice: tprice, prices : prices  , cdate:cdate};
+  // console.log(bill);
   const result = await BillDAO.insert(bill);
   res.json(result);
 });

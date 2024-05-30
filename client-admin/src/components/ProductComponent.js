@@ -73,7 +73,7 @@ const Product = (props) =>{
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/products/search/" +keyword, config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/products/search/" +keyword, config).then((res) => {
       const result = res.data;
       setProducts(result);
     });
@@ -91,7 +91,7 @@ const Product = (props) =>{
       },
     };
     try {
-      const response = await axios.get("/api/admin/products?page=" + page, config);
+      const response = await axios.get("http://localhost:3000/api/admin/products?page=" + page, config);
       const result = response.data;
       updateProducts(result.products, result.noPages);
     } catch (error) {

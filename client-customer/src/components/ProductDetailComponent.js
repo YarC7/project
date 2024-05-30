@@ -127,7 +127,7 @@ class ProductDetail extends Component {
   // apis
   apiGetProduct(id) {
     this.setState({ loading: true }); // Set loading to true before making the API request
-    axios.get("/api/customer/products/" + id).then((res) => {
+    axios.get("http://localhost:3000/api/customer/products/" + id).then((res) => {
       const result = res.data;
       this.setState({ product: result, loading: false }); // Set loading to false and update product state after the API request is complete
     });

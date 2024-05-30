@@ -68,7 +68,7 @@ function NavigationComponent({ navigate }) {
     setOpen2(false);
   };
   const apiGetCategories = () => {
-    axios.get("/api/customer/categories").then((res) => {
+    axios.get("http://localhost:3000/api/customer/categories").then((res) => {
       const result = res.data;
       setCategories(result);
     });

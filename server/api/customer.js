@@ -205,7 +205,7 @@ router.post("/forgot", async function (req, res) {
 
     await existingUser.save(); // Use await here to ensure the save operation completes before proceeding.
 
-    const resetLink = `http://${req.hostname}/api/customer/reset/${token}`;
+    const resetLink = `http://${req.hostname}http://localhost:3000/reset/${token}`;
     await EmailUtil.reset(existingUser.email, resetLink);
 
     res.status(200).json({

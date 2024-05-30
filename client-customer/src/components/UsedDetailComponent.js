@@ -118,7 +118,7 @@ const UsedDetail = (props) => {
 
 
   const apiGetDevices = () => {
-    axios.get("/api/customer/products/list").then((res) => {
+    axios.get("http://localhost:3000/api/customer/products/list").then((res) => {
       const result = res.data;
       setDevices(result);
 
@@ -126,7 +126,7 @@ const UsedDetail = (props) => {
   };
 
   const apiGetClasses = () => {
-    axios.get("/api/customer/class").then((res) => {
+    axios.get("http://localhost:3000/api/customer/class").then((res) => {
       const result = res.data;
       setClasses(result);
 
@@ -134,7 +134,7 @@ const UsedDetail = (props) => {
   };
 
   const apiGetPeriods = () => {
-    axios.get("/api/customer/period").then((res) => {
+    axios.get("http://localhost:3000/api/customer/period").then((res) => {
       const result = res.data;
       setPeriods(result);
     });

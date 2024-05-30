@@ -140,7 +140,7 @@ class CategoryDetail extends Component {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.post("/api/admin/categories", cate, config).then((res) => {
+    axios.post("http://localhost:3000/api/admin/categories", cate, config).then((res) => {
       const result = res.data;
       if (result) {
         alert("OK BABY!");
@@ -157,7 +157,7 @@ class CategoryDetail extends Component {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/categories", config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/categories", config).then((res) => {
       const result = res.data;
       this.props.updateCategories(result);
     });
@@ -183,7 +183,7 @@ class CategoryDetail extends Component {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.put("/api/admin/categories/" + id, cate, config).then((res) => {
+    axios.put("http://localhost:3000/api/admin/categories/" + id, cate, config).then((res) => {
       const result = res.data;
       if (result) {
         alert("OK BABY!");
@@ -212,7 +212,7 @@ class CategoryDetail extends Component {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.delete("/api/admin/categories/" + id, config).then((res) => {
+    axios.delete("http://localhost:3000/api/admin/categories/" + id, config).then((res) => {
       const result = res.data;
       if (result) {
         alert("OK BABY!");

@@ -25,7 +25,7 @@ function Login() {
 
     try {
       const account = { username, password };
-      const response = await axios.post('/api/admin/login', account);
+      const response = await axios.post('http://localhost:3000/api/admin/login', account);
       const result = response.data;
 
       if (result.success) {

@@ -72,7 +72,7 @@ class SignupAdmin extends Component {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.post("/api/admin/add-admin", account, config).then((res) => {
+    axios.post("http://localhost:3000/api/admin/add-admin", account, config).then((res) => {
       const result = res.data;
       console.log(result);
       if (result.success) {

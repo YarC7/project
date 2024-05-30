@@ -99,7 +99,7 @@ const UsedDetail = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/users/all", config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/users/all", config).then((res) => {
       const result = res.data;
       setUsers(result);
     });
@@ -111,7 +111,7 @@ const UsedDetail = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/devices", config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/devices", config).then((res) => {
       const result = res.data;
       setDevices(result);
 
@@ -124,7 +124,7 @@ const UsedDetail = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/class", config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/class", config).then((res) => {
       const result = res.data;
       setClasses(result);
 
@@ -137,7 +137,7 @@ const UsedDetail = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/period", config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/period", config).then((res) => {
       const result = res.data;
       setPeriods(result);
     });
@@ -174,7 +174,7 @@ const UsedDetail = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.post("/api/admin/useds", prod, config).then((res) => {
+    axios.post("http://localhost:3000/api/admin/useds", prod, config).then((res) => {
       const result = res.data;
       if (result) {
         alert("Used added successfully!");
@@ -216,7 +216,7 @@ const UsedDetail = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.put("/api/admin/useds/" + id, prod, config).then((res) => {
+    axios.put("http://localhost:3000/api/admin/useds/" + id, prod, config).then((res) => {
       const result = res.data;
       if (result) {
         alert("Used updated successfully!");
@@ -245,7 +245,7 @@ const UsedDetail = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.delete("/api/admin/useds/" + id, config).then((res) => {
+    axios.delete("http://localhost:3000/api/admin/useds/" + id, config).then((res) => {
       const result = res.data;
       if (result) {
         alert("Used deleted successfully!");
@@ -262,12 +262,12 @@ const UsedDetail = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/useds?page=" + props.curPage, config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/useds?page=" + props.curPage, config).then((res) => {
       const result = res.data;
       if (result.useds.length !== 0) {
         props.updateUseds(result.useds, result.noPages);
       } else {
-        axios.get("/api/admin/useds?page=" + (props.curPage - 1), config).then((res) => {
+        axios.get("http://localhost:3000/api/admin/useds?page=" + (props.curPage - 1), config).then((res) => {
           const result = res.data;
           props.updateUseds(result.useds, result.noPages);
         });

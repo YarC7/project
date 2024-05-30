@@ -56,7 +56,7 @@ const Bill = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/bill/search/" +keyword, config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/bill/search/" +keyword, config).then((res) => {
       const result = res.data;
       setBills(result);
     });
@@ -74,9 +74,8 @@ const Bill = (props) => {
       },
     };
     try {
-      const response = await axios.get("/api/admin/bill?page=" + page, config);
+      const response = await axios.get("http://localhost:3000/api/admin/bill?page=" + page, config);
       const result = response.data;
-      console.log(result);
       updateBill(result, result.noPages);
     } catch (error) {
       console.error(error); // Handle API request errors gracefully
@@ -92,10 +91,10 @@ const Bill = (props) => {
       disablePadding: true,
       label: "ID"
     },
-    { id: "device", numeric: false, disablePadding: false, label: "Thiết bị" },
+    // { id: "device", numeric: false, disablePadding: false, label: "Thiết bị" },
     { id: "code", numeric: false, disablePadding: false, label: "Mã hoá đơn" },
-    { id: "quantity", numeric: false, disablePadding: false, label: "Số lượng" },
-    { id: "price", numeric: false, disablePadding: false, label: "Đơn giá" },
+    // { id: "quantity", numeric: false, disablePadding: false, label: "Số lượng" },
+    // { id: "price", numeric: false, disablePadding: false, label: "Đơn giá" },
     { id: "tprice", numeric: false, disablePadding: false, label: "Tổng tiền" },
     { id: "cdate", numeric: false, disablePadding: false, label: "Ngày tạo" },
     { id: "producer", numeric: false, disablePadding: false, label: "Nhà cung cấp" },

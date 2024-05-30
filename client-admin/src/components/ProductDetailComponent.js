@@ -87,7 +87,7 @@ const ProductDetail = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/categories", config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/categories", config).then((res) => {
       const result = res.data;
       setCategories(result);
     });
@@ -135,7 +135,7 @@ const ProductDetail = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.post("/api/admin/products", prod, config).then((res) => {
+    axios.post("http://localhost:3000/api/admin/products", prod, config).then((res) => {
       const result = res.data;
       if (result) {
         alert("Product added successfully!");
@@ -189,7 +189,7 @@ const ProductDetail = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.put("/api/admin/products/" + id, prod, config).then((res) => {
+    axios.put("http://localhost:3000/api/admin/products/" + id, prod, config).then((res) => {
       const result = res.data;
       if (result) {
         alert("Product updated successfully!");
@@ -218,7 +218,7 @@ const ProductDetail = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.delete("/api/admin/products/" + id, config).then((res) => {
+    axios.delete("http://localhost:3000/api/admin/products/" + id, config).then((res) => {
       const result = res.data;
       if (result) {
         alert("Product deleted successfully!");
@@ -235,12 +235,12 @@ const ProductDetail = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/products?page=" + props.curPage, config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/products?page=" + props.curPage, config).then((res) => {
       const result = res.data;
       if (result.products.length !== 0) {
         props.updateProducts(result.products, result.noPages);
       } else {
-        axios.get("/api/admin/products?page=" + (props.curPage - 1), config).then((res) => {
+        axios.get("http://localhost:3000/api/admin/products?page=" + (props.curPage - 1), config).then((res) => {
           const result = res.data;
           props.updateProducts(result.products, result.noPages);
         });

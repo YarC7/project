@@ -47,7 +47,7 @@ function PeriodDetail(props) {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.post("/api/admin/period", prod, config).then((res) => {
+    axios.post("http://localhost:3000/api/admin/period", prod, config).then((res) => {
       const result = res.data;
       if (result) {
         
@@ -84,7 +84,7 @@ function PeriodDetail(props) {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.put("/api/admin/period/" + id, prod, config).then((res) => {
+    axios.put("http://localhost:3000/api/admin/period/" + id, prod, config).then((res) => {
       const result = res.data;
       if (result) {
         alert("Period updated successfully!");
@@ -113,7 +113,7 @@ function PeriodDetail(props) {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.delete("/api/admin/period/" + id, config).then((res) => {
+    axios.delete("http://localhost:3000/api/admin/period/" + id, config).then((res) => {
       const result = res.data;
       if (result) {
         alert("Period deleted successfully!");
@@ -130,12 +130,12 @@ function PeriodDetail(props) {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/period?page=" + props.curPage, config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/period?page=" + props.curPage, config).then((res) => {
       const result = res.data;
       if (result.length !== 0) {
         props.updatePeriod(result.period, result.noPages);
       } else {
-        axios.get("/api/admin/period?page=" + (props.curPage - 1), config).then((res) => {
+        axios.get("http://localhost:3000/api/admin/period?page=" + (props.curPage - 1), config).then((res) => {
           const result = res.data;
           props.updatePeriod(result.period, result.noPages);
         });

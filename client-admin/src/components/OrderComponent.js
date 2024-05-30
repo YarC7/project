@@ -78,7 +78,7 @@ const Order = () => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/orders", config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/orders", config).then((res) => {
       const result = res.data;
       setOrders(result);
       setIsLoading(false);
@@ -92,7 +92,7 @@ const Order = () => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.put("/api/admin/orders/status/" + id, body, config).then((res) => {
+    axios.put("http://localhost:3000/api/admin/orders/status/" + id, body, config).then((res) => {
       const result = res.data;
       if (result) {
         setSnackbarOpen(true);
@@ -138,7 +138,7 @@ const Order = () => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/orders/search/" +keyword, config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/orders/search/" +keyword, config).then((res) => {
       const result = res.data;
       setOrders(result);
     });

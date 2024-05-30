@@ -130,7 +130,7 @@ function Myprofile() {
 
   const apiPutCustomer = (id, user) => {
     const config = { headers: { "x-access-token": JSON.parse(sessionStorage.getItem("token")) } };
-    axios.put("/api/admin/user/" + id, user, config).then((res) => {
+    axios.put("http://localhost:3000/api/admin/user/" + id, user, config).then((res) => {
       const result = res.data;
       if (result) {
         alert("OK BABY!");

@@ -86,7 +86,7 @@ const Mycart = ({ navigate }) => {
   const apiCheckout = (total, items, customer,used) => {
     const body = { total: total, items: items, customer: customer , used : used };
     const config = { headers: { "x-access-token": token } };
-    axios.post("/api/customer/checkout", body, config).then((res) => {
+    axios.post("http://localhost:3000/api/customer/checkout", body, config).then((res) => {
       const result = res.data;
       setLoading(false);
       if (result) {

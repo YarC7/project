@@ -3,13 +3,12 @@ import {
   Box,
   Button,
   TextField,
-  Typography,MenuItem,FormControl,InputLabel,Select,
-  Container
+  Typography,MenuItem,FormControl,InputLabel,Select,OutlinedInput,Chip 
+  
 } from "@mui/material";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import MyContext from "../contexts/MyContext";
 
 
 function BillDetail(props) {
@@ -17,32 +16,96 @@ function BillDetail(props) {
   const [txtProducer, setTxtProducer] = useState("");
   const [txtCode, setTxtCode] = useState("");
   const [txtQuantity, setTxtQuantity] = useState("");
-  const [txtTprice, setTxtTprice] = useState("");
+  const [txtTprice, setTxtTprice] = useState(0);
   const [txtPrice, setTxtPrice] = useState("");
   const [txtCdate, setTxtCdate] = useState(new Date());
   const [devices, setDevices] = useState([]);
-  const [cmbDevice, setCmbDevice] = useState("");
-  const { setBill} = useContext(MyContext);
-
+  const [cmbDevice, setCmbDevice] = useState([]);
+  const [quantities, setQuantities] = useState([]);
+  const [totalPrices, setTotalPrices] = useState([]);
   useEffect(() => {
     if (props.item) {
-      const { _id, producer, tprice , price , cdate ,quantity, product , code } = props.item;
+      const { _id, producer, tprice , prices , cdate ,quantities, pid , code } = props.item;
       setTxtTprice(tprice);
       setTxtID(_id);
       setTxtProducer(producer);
-      setTxtQuantity(quantity);
-      setTxtPrice(price);
+      setQuantities(quantities);
+      setTotalPrices(prices);
       setTxtCdate(cdate);
       setTxtCode(code);
-      setCmbDevice(product._id);
-
+      setCmbDevice(pid);
     }
   }, [props.item]);
 
   useEffect(() => {
     apiGetDevices();
-  }, []);
+    const newQuantities = {};
+    const newTotalPrices = {};
+    if (totalPrices.length >0 && quantities.length>0){
+      totalPrices.forEach(pr => {
+        newTotalPrices[pr.pid] = pr.price;
+        setTotalPrices(newTotalPrices);
 
+        
+      })
+      quantities.forEach(qu => {
+        newQuantities[qu.pid] = qu.quantity;
+        setQuantities(newQuantities);
+
+      })
+    }
+    else {
+      devices.forEach(product => {
+        if (quantities[product._id]) {
+          newQuantities[product._id] = quantities[product._id];
+          newTotalPrices[product._id] = (product.price * quantities[product._id]) || 0;
+        }
+      });
+    }
+
+  }, [cmbDevice]);
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
+  };
+
+  const getSelectedProducts = () => {
+    return cmbDevice.map(id => devices.find(product => product._id === id));
+  };
+  const handleQuantityChange = (productId, event) => {
+    const value = event.target.value;
+    if (!value) return;
+
+    const newQuantities = {
+      ...quantities,
+      [productId]: value,
+    };
+    setQuantities(newQuantities);
+
+    // Update total prices immediately after updating quantities
+    const product = devices.find(p => p._id === productId);
+    if (product) {
+      const newTotalPrices = {
+        ...totalPrices,
+        [productId]: product.price * value,
+      };
+      setTotalPrices(newTotalPrices);
+      
+    }
+  };
+
+  useEffect(() => {
+    // Calculate overall total price
+    const total = Object.values(totalPrices).reduce((acc, price) => acc + price, 0);
+    setTxtTprice(total);
+  }, [totalPrices]);
+  
   const renderDevices = devices.map((dev) => (
     <MenuItem
       key={dev._id}
@@ -59,7 +122,7 @@ function BillDetail(props) {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/devices", config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/devices", config).then((res) => {
       const result = res.data;
       setDevices(result);
     });
@@ -68,47 +131,64 @@ function BillDetail(props) {
   const btnAddClick = (e) => {
     e.preventDefault();
     const producer = txtProducer.trim();
-    const quantity = txtQuantity.trim();
+    const lquantity = quantities;
     const code = txtCode.trim();
     const tprice = parseInt(txtTprice);
-    const price = parseInt(txtPrice);
+    const lprice = totalPrices;
     const cdate = (txtCdate);
-    const device = cmbDevice;
-
-    if (producer && quantity&&price && cdate && device && code) {
+    const device = getSelectedProducts();
+    const pid = cmbDevice;
+    const tempPrice = pid.map((id) => (
+      {
+        pid : id,
+        price : lprice[id]
+      }
+    ));
+    const tempQuantity = pid.map((id) => (
+      {
+        pid : id,
+        quantity : lquantity[id]
+      }
+    ));
+    if (producer && tempQuantity&&tempPrice && cdate && device && code) {
       const prod = {
         tprice: tprice,
         producer: producer,
-        quantity: quantity,
-        price: price,
+        quantities: tempQuantity,
+        prices: tempPrice,
         cdate: cdate,
         device: device,
-        code : code
+        code : code,
+        pid : pid
       };
       apiPostBill(prod);
+      setTotalPrices([]);
+      setQuantities([]);
+      setCmbDevice([])
+      setTxtProducer("");
+      setTxtCode("");
+      // console.log(prod);
     } else {
       alert("Please input all required fields");
     }
   };
 
   const apiPostBill = (prod) => {
-    // const config = {
-    //   headers: {
-    //     "x-access-token": JSON.parse(sessionStorage.getItem("token")),
-    //   },
-    // };
-    // axios.post("/api/admin/bill", prod, config).then((res) => {
-    //   const result = res.data;
-    //   if (result) {
+    const config = {
+      headers: {
+        "x-access-token": JSON.parse(sessionStorage.getItem("token")),
+      },
+    };
+    axios.post("http://localhost:3000/api/admin/bill", prod, config).then((res) => {
+      const result = res.data;
+      if (result) {
         
-    //     alert("Bill added successfully!");
-    //     apiGetPeriod();
-    //   } else {
-    //     alert("Failed to add Bill!");
-    //   }
-    // });
-    setBill(prod);
-    alert("Add Bill to product successfully");
+        alert("Bill added successfully!");
+        console.log(result);
+      } else {
+        alert("Failed to add Bill!");
+      }
+    });
 
   };
 
@@ -145,7 +225,7 @@ function BillDetail(props) {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.put("/api/admin/bill/" + id, prod, config).then((res) => {
+    axios.put("http://localhost:3000/api/admin/bill/" + id, prod, config).then((res) => {
       const result = res.data;
       if (result) {
         alert("Bill updated successfully!");
@@ -174,7 +254,7 @@ function BillDetail(props) {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.delete("/api/admin/bill/" + id, config).then((res) => {
+    axios.delete("http://localhost:3000/api/admin/bill/" + id, config).then((res) => {
       const result = res.data;
       if (result) {
         alert("Bill deleted successfully!");
@@ -191,12 +271,12 @@ function BillDetail(props) {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/bill?page=" + props.curPage, config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/bill?page=" + props.curPage, config).then((res) => {
       const result = res.data;
       if (result.bill.length !== 0) {
         props.updateBill(result.bill, result.noPages);
       } else {
-        axios.get("/api/admin/bill?page=" + (props.curPage - 1), config).then((res) => {
+        axios.get("http://localhost:3000/api/admin/bill?page=" + (props.curPage - 1), config).then((res) => {
           const result = res.data;
           props.updateBill(result.bill, result.noPages);
         });
@@ -238,16 +318,59 @@ function BillDetail(props) {
         <FormControl fullWidth sx={{ m: 2 }}>
           <InputLabel>Thiết bị</InputLabel>
           <Select
-            defaultValue = ""
+            multiple
             value={cmbDevice}
             onChange={(e) => {
-              setCmbDevice(e.target.value);
-
+              // setCmbDevice(e.target.value);
+              const {
+                target: { value },
+              } = e;
+              setCmbDevice(
+                // On autofill we get a stringified value.
+                typeof value === 'string' ? value.split(',') : value,
+              );
             }}
+            input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
             label="Device"
+            renderValue={(selected) => (
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                {selected.map((value) => (
+                  <Chip key={value} label={value} />
+                ))}
+              </Box>
+            )}
+            MenuProps={MenuProps}
           >
             {renderDevices}
           </Select>
+          {getSelectedProducts().map((product) => (
+            product ? (
+              <Box>
+                <TextField
+                  key={product._id}
+                  label={`Quantity for ${product.name}`}
+                  type="number"
+                  value={quantities[product._id] || ''}
+                  onChange={(event) => handleQuantityChange(product._id, event)}
+                  margin="normal"
+                  sx={{ mt: 2 }}
+                />
+                <TextField
+                  label={`Đơn giá for ${product.name}`}
+                  type="number"
+                  value={product.price}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  sx={{ mr: 2 }}
+                />
+                <Typography variant="h6">
+                  Tổng giá: {totalPrices[product._id] || 0}
+                </Typography>
+
+              </Box> 
+            ) : null
+          ))}
         </FormControl>
         <TextField
           fullWidth
@@ -258,34 +381,12 @@ function BillDetail(props) {
           }}
           sx={{ mt: 2 }}
         />
-        <TextField
-          width="200px"
-          label="Số Lượng"
-          value={txtQuantity}
-          onChange={(e) => {
-            setTxtQuantity(e.target.value);
-            setTxtTprice(txtPrice*e.target.value);
-          }}
-          sx={{ mt: 2 }}
-        />
-        <TextField
-          width="200px"
-          label="Đơn giá"
-          value={txtPrice}
-          onChange={(e) => {
-            setTxtPrice(e.target.value);
-            setTxtTprice(e.target.value*txtQuantity);
-          }}
-          sx={{ mt: 2 }}
-        />
+
         <TextField
           width="200px"
           label="Tổng giá tiền"
           readOnly
           value={txtTprice}
-          onChange={(e) => {
-            setTxtTprice(txtPrice**txtQuantity);
-          }}
           sx={{ mt: 2 }}
         />
         <Typography className="text-date">Ngày mua</Typography>

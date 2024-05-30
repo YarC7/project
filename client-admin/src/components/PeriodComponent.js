@@ -78,7 +78,7 @@ const Period = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/period/search/" +keyword, config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/period/search/" +keyword, config).then((res) => {
       const result = res.data;
       setPeriods(result.period);
     });
@@ -96,7 +96,7 @@ const Period = (props) => {
       },
     };
     try {
-      const response = await axios.get("/api/admin/period?page=" + page, config);
+      const response = await axios.get("http://localhost:3000/api/admin/period?page=" + page, config);
       const result = response.data;
       updatePeriod(result, result.noPages);
     } catch (error) {

@@ -52,7 +52,7 @@ function Category(props) {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/categories", config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/categories", config).then((res) => {
       const result = res.data;
       setCategories(result);
     });
@@ -64,7 +64,7 @@ function Category(props) {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/categories/search/" +keyword, config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/categories/search/" +keyword, config).then((res) => {
       const result = res.data;
       setCategories(result);
     });

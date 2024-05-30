@@ -170,7 +170,7 @@ class Myorders extends Component {
   // apis
   apiGetOrdersByCustID(cid) {
     const config = { headers: { "x-access-token": this.context.token } };
-    axios.get("/api/customer/orders/customer/" + cid, config).then((res) => {
+    axios.get("http://localhost:3000/api/customer/orders/customer/" + cid, config).then((res) => {
       const result = res.data;
       this.setState({ orders: result, loading: false }); // Set loading to false after the API request is complete
     });

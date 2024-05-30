@@ -181,7 +181,7 @@ class Customer extends Component {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/customers/sendmail/" + id, config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/customers/sendmail/" + id, config).then((res) => {
       const result = res.data;
       alert(result.message);
     });
@@ -195,7 +195,7 @@ class Customer extends Component {
       },
     };
     axios
-      .put("/api/admin/customers/deactive/" + id, body, config)
+      .put("http://localhost:3000/api/admin/customers/deactive/" + id, body, config)
       .then((res) => {
         const result = res.data;
         if (result) {
@@ -221,7 +221,7 @@ class Customer extends Component {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/customers", config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/customers", config).then((res) => {
       const result = res.data;
       this.setState({ customers: result });
     });
@@ -233,7 +233,7 @@ class Customer extends Component {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/orders/customer/" + cid, config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/orders/customer/" + cid, config).then((res) => {
       const result = res.data;
       this.setState({ orders: result });
     });

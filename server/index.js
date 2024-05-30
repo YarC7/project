@@ -1,6 +1,13 @@
 //CLI: npm install express body-parser --save
 const express = require('express');
+const cors = require('cors')
 const app = express();
+const corsOptions ={
+  origin:['http://localhost:3001', 'http://localhost:3002'], 
+  credentials:true,            //access-control-allow-credentials:true
+  optionSuccessStatus:200
+}
+app.use(cors(corsOptions));
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);

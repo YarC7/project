@@ -19,6 +19,7 @@ import Myprofile from "./ProfileComponent";
 import Period from "./PeriodComponent";
 import Demo2 from "./DataTableFilterComponent";
 import Demo from "./page/demo";
+import ProductSelector from "./page/demo1";
 
 class Main extends Component {
   render() {
@@ -39,6 +40,7 @@ class Main extends Component {
               <Route path="/admin/home" element={<Home />} />
               <Route path="/admin/user" element={<User />} />
               <Route path="/admin/demo" element={<Demo />} />
+              <Route path="/admin/demo1" element={<ProductSelector />} />
               <Route path="/admin/profile" element={<Myprofile />} />
               <Route path="/admin/used" element={<Used />} />
               <Route path="/admin/class" element={<Class />} />

@@ -76,7 +76,7 @@ const Used = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/useds/search/" +keyword, config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/useds/search/" +keyword, config).then((res) => {
       const result = res.data;
       setUseds(result);
     });
@@ -94,7 +94,7 @@ const Used = (props) => {
       },
     };
     try {
-      const response = await axios.get("/api/admin/useds?page=" + page, config);
+      const response = await axios.get("http://localhost:3000/api/admin/useds?page=" + page, config);
       const result = response.data;
       updateUseds(result.useds, result.noPages);
     } catch (error) {

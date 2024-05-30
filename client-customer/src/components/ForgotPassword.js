@@ -29,7 +29,7 @@ class ForgotPassword extends Component {
     const email = this.state.email;
     if (email) {
       axios
-        .post("/api/customer/forgot", { email })
+        .post("http://localhost:3000/api/customer/forgot", { email })
         .then((res) => {
           const result = res.data;
           if (result.success === true) {

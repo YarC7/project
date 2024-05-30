@@ -30,7 +30,7 @@ function ListProduct(props) {
 
   const apiGetProductsByCatID = (cid) => {
     setLoading(true);
-    axios.get("/api/customer/products/category/" + cid)
+    axios.get("http://localhost:3000/api/customer/products/category/" + cid)
       .then((res) => {
         setProducts(res.data);
         setLoading(false);
@@ -43,7 +43,7 @@ function ListProduct(props) {
 
   const apiGetProductsByKeyword = (keyword) => {
     setLoading(true);
-    axios.get("/api/customer/products/search/" + keyword)
+    axios.get("http://localhost:3000/api/customer/products/search/" + keyword)
       .then((res) => {
         setProducts(res.data);
         setLoading(false);
@@ -56,7 +56,7 @@ function ListProduct(props) {
 
   const apiGetProducts = () => {
     setLoading(true);
-    axios.get("/api/customer/products/list")
+    axios.get("http://localhost:3000/api/customer/products/list")
       .then((res) => {
         setProducts(res.data);
         setLoading(false);

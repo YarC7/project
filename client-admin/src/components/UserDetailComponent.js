@@ -70,7 +70,7 @@ const UserDetail = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.post("/api/admin/users", prod, config).then((res) => {
+    axios.post("http://localhost:3000/api/admin/users", prod, config).then((res) => {
       const result = res.data;
       if (result) {
         alert("User added successfully!");
@@ -110,7 +110,7 @@ const UserDetail = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.put("/api/admin/users/" + id, prod, config).then((res) => {
+    axios.put("http://localhost:3000/api/admin/users/" + id, prod, config).then((res) => {
       const result = res.data;
       if (result) {
         alert("User updated successfully!");
@@ -139,7 +139,7 @@ const UserDetail = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.delete("/api/admin/users/" + id, config).then((res) => {
+    axios.delete("http://localhost:3000/api/admin/users/" + id, config).then((res) => {
       const result = res.data;
       if (result) {
         alert("User deleted successfully!");
@@ -156,12 +156,12 @@ const UserDetail = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/users?page=" + props.curPage, config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/users?page=" + props.curPage, config).then((res) => {
       const result = res.data;
       if (result.users.length !== 0) {
         props.updateUsers(result.users, result.noPages);
       } else {
-        axios.get("/api/admin/users?page=" + (props.curPage - 1), config).then((res) => {
+        axios.get("http://localhost:3000/api/admin/users?page=" + (props.curPage - 1), config).then((res) => {
           const result = res.data;
           props.updateUsers(result.users, result.noPages);
         });

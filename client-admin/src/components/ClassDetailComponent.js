@@ -63,7 +63,7 @@ const ClassDetail = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.post("/api/admin/classes", prod, config).then((res) => {
+    axios.post("http://localhost:3000/api/admin/classes", prod, config).then((res) => {
       const result = res.data;
       if (result) {
         console.log(result);
@@ -102,7 +102,7 @@ const ClassDetail = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.put("/api/admin/classes/" + id, prod, config).then((res) => {
+    axios.put("http://localhost:3000/api/admin/classes/" + id, prod, config).then((res) => {
       const result = res.data;
       if (result) {
         alert("Class updated successfully!");
@@ -131,7 +131,7 @@ const ClassDetail = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.delete("/api/admin/classes/" + id, config).then((res) => {
+    axios.delete("http://localhost:3000/api/admin/classes/" + id, config).then((res) => {
       const result = res.data;
       if (result) {
         alert("Class deleted successfully!");
@@ -148,12 +148,12 @@ const ClassDetail = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/classes?page=" + props.curPage, config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/classes?page=" + props.curPage, config).then((res) => {
       const result = res.data;
       if (result.classes.length !== 0) {
         props.apiPutClass(result.classes, result.noPages);
       } else {
-        axios.get("/api/admin/classes?page=" + (props.curPage - 1), config).then((res) => {
+        axios.get("http://localhost:3000/api/admin/classes?page=" + (props.curPage - 1), config).then((res) => {
           const result = res.data;
           props.apiPutClass(result.classes, result.noPages);
         });

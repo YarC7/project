@@ -83,19 +83,35 @@ const PeriodSchema = mongoose.Schema(
   },
   { versionKey: false }
 );
+const PriceSchema = mongoose.Schema(
+  {
+    pid: String,
+    price: Number,
+  },
+  { versionKey: false, _id: false }
+);
+const QuantitySchema = mongoose.Schema(
+  {
+    pid: String,
+    quantity: Number,
+  },
+  { versionKey: false, _id: false }
+);
 const BillSchema = mongoose.Schema(
   {
     _id: mongoose.Schema.Types.ObjectId,
     code : String,
-    product: ProductSchema,
+    product: [ProductSchema],
     producer : String,
-    quantity : Number,
+    quantities : [QuantitySchema],
     tprice : Number,
-    price : Number,
+    prices : [PriceSchema],
     cdate : String ,
+    pid : [String]
   },
   { versionKey: false }
 );
+
 const ItemSchema = mongoose.Schema(
   {
     product: ProductSchema,

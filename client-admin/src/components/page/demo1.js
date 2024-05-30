@@ -1,37 +1,59 @@
 import React, { useState } from 'react';
-import { LineChart, Line, XAxis, YAxis } from 'recharts';
+import { Select, MenuItem, TextField, FormControl, InputLabel, Chip, Box } from '@mui/material';
 
-const data = [
-  { name: 'A', value: 10 },
-  { name: 'B', value: 20 },
-  { name: 'C', value: 30 },
-];
+const ProductSelector = () => {
+  const [selectedProducts, setSelectedProducts] = useState([]);
+  const [quantities, setQuantities] = useState({});
 
-const Demo = () => {
-  const [selectedData, setSelectedData] = useState(data);
-
-  const handleDataChange = (event) => {
-    const newData = data.filter((item) => item.name === event.target.value);
-    setSelectedData(newData);
+  const handleProductChange = (event) => {
+    setSelectedProducts(event.target.value);
   };
 
+  const handleQuantityChange = (product, event) => {
+    setQuantities({
+      ...quantities,
+      [product]: event.target.value,
+    });
+  };
+
+  const products = ['Product 1', 'Product 2', 'Product 3'];
+
   return (
-    <div>
-      <select onChange={handleDataChange}>
-        <option value="all">Tất cả</option>
-        {data.map((item) => (
-          <option key={item.name} value={item.name}>
-            {item.name}
-          </option>
+    <FormControl fullWidth>
+      <InputLabel id="product-select-label">Products</InputLabel>
+      <Select
+        labelId="product-select-label"
+        multiple
+        value={selectedProducts}
+        onChange={handleProductChange}
+        renderValue={(selected) => (
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+            {selected.map((value) => (
+              <Chip key={value} label={value} />
+            ))}
+          </Box>
+        )}
+      >
+        {products.map((product) => (
+          <MenuItem key={product} value={product}>
+            {product}
+          </MenuItem>
         ))}
-      </select>
-      <LineChart width={600} height={300} data={selectedData}>
-        <Line type="monotone" dataKey="value" stroke="#007bff" />
-        <XAxis dataKey="name" />
-        <YAxis />
-      </LineChart>
-    </div>
+      </Select>
+
+      {selectedProducts.map((product) => (
+        <TextField
+          key={product}
+          label={`Quantity for ${product}`}
+          type="number"
+          value={quantities[product] || ''}
+          onChange={(event) => handleQuantityChange(product, event)}
+          margin="normal"
+          fullWidth
+        />
+      ))}
+    </FormControl>
   );
 };
 
-export default Demo;
+export default ProductSelector;

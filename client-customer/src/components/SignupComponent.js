@@ -96,7 +96,7 @@ class Signup extends Component {
   };
 
   apiSignup = (account) => {
-    axios.post("/api/customer/signup", account).then((res) => {
+    axios.post("http://localhost:3000/api/customer/signup", account).then((res) => {
       const result = res.data;
       if (result.success) {
         alert(result.message);

@@ -68,7 +68,7 @@ const Class = (props) => {
         "x-access-token": JSON.parse(sessionStorage.getItem("token")),
       },
     };
-    axios.get("/api/admin/classes/search/" +keyword, config).then((res) => {
+    axios.get("http://localhost:3000/api/admin/classes/search/" +keyword, config).then((res) => {
       const result = res.data;
       setClasses(result);
     });
@@ -86,7 +86,7 @@ const Class = (props) => {
       },
     };
     try {
-      const response = await axios.get("/api/admin/classes?page=" + page, config);
+      const response = await axios.get("http://localhost:3000/api/admin/classes?page=" + page, config);
       const result = response.data;
       updateClasses(result.classes, result.noPages);
     } catch (error) {

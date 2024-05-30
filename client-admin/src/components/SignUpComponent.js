@@ -101,7 +101,7 @@ const Signup = ({ history }) => {
   };
 
   const apiSignup = (account) => {
-    axios.post("/api/admin/signup", account).then((res) => {
+    axios.post("http://localhost:3000/api/admin/signup", account).then((res) => {
       const result = res.data;
       if (result.success) {
         alert(result.message);

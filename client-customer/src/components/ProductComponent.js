@@ -102,7 +102,7 @@ class Product extends Component {
   }
   apiGetProductsByKeyword(keyword) {
     this.setState({ loading: true }); // Set loading to true before making the API request
-    axios.get("/api/customer/products/search/" + keyword).then((res) => {
+    axios.get("http://localhost:3000/api/customer/products/search/" + keyword).then((res) => {
       const result = res.data;
       this.setState({ products: result, loading: false }); // Set loading to false and update products state after the API request is complete
     });
@@ -110,7 +110,7 @@ class Product extends Component {
   // apis
   apiGetProductsByCatID(cid) {
     this.setState({ loading: true }); // Set loading to true before making the API request
-    axios.get("/api/customer/products/category/" + cid).then((res) => {
+    axios.get("http://localhost:3000/api/customer/products/category/" + cid).then((res) => {
       const result = res.data;
       this.setState({ products: result, loading: false }); // Set loading to false and update products state after the API request is complete
     });

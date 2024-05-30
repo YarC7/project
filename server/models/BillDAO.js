@@ -21,11 +21,11 @@ const BillDAO = {
     const newvalues = {
       producer : bill.producer,
       code : bill.code,
-      quantity : bill.quantity,
+      quantities : bill.quantities,
       tprice : bill.tprice,
-      price : bill.price,
+      prices : bill.prices,
       cdate : bill.cdate,
-      year : bill.year,
+      // year : bill.year,
     };
     const result = await Models.Bill.findByIdAndUpdate(
       bill._id,

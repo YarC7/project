@@ -113,7 +113,7 @@ const MyProfile = () => {
   const apiPutCustomer = (id, updatedCustomer) => {
     const config = { headers: { "x-access-token": token } };
     axios
-      .put(`/api/customer/customers/${id}`, updatedCustomer, config)
+      .put(`http://localhost:3000/api/customer/customers/${id}`, updatedCustomer, config)
       .then((res) => {
         const result = res.data;
         if (result) {
