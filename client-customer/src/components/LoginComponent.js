@@ -83,7 +83,7 @@ class Login extends Component {
                 gutterBottom
                 style={{ textAlign: "center" }}
               >
-                CUSTOMER LOGIN
+                LOGIN
               </Typography>
               <form onSubmit={(e) => this.btnLoginClick(e)}>
                 <Grid container spacing={2}>

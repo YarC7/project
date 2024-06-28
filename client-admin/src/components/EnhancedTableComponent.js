@@ -144,7 +144,14 @@ export default function EnhancedTable({ rows, headCells , onRowClick ,onCanClick
                                 CANCEL
                               </Button>
                             </Box>
-                          ) : (
+                          ) : cell.id === 'state' ? (
+                            row.state == 0 ? "Not Available" :
+                            row.state == 1 ? "Available" :
+                            row.state == 2 ? "In Use" :
+                            "Out of stock"
+                          ) :
+                          
+                          (
                             // Render other data
                             row[cell.id]
                           )}

@@ -12,12 +12,14 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.4.0",
+    "chart.js": "^4.4.3",
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.10",
     "exceljs": "^4.4.0",
     "luxon": "^3.4.4",
     "moment": "^2.30.1",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-datepicker": "^6.9.0",
     "react-dom": "^18.2.0",
     "react-export-table-to-excel": "^1.0.6",
@@ -27,7 +29,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "set PORT=3001 && react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -45,7 +47,6 @@
     ]
   },
   "homepage": "/admin",
-  "proxy": "http://localhost:3001",
   "devDependencies": {
     "eslint": "^8.0.0",
     "eslint-plugin-react": "^7.33.0"

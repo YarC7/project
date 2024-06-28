@@ -16,7 +16,7 @@ import ListProduct from "./ListProductComponent";
 class Main extends Component {
   render() {
     return (
-      <Container maxWidth="lg">
+      <div className="body-customer">
         <NavigationComponent />
         <Routes>
           <Route path="/" element={<Navigate replace to="/login" />} />
@@ -32,7 +32,7 @@ class Main extends Component {
           <Route path="/mycart" element={<Mycart />} />
           <Route path="/myorders" element={<Myorders />} />
         </Routes>
-      </Container>
+      </div>
     );
   }
 }

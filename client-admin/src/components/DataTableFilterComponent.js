@@ -49,7 +49,7 @@ const Dropdown = ({ id, value, onChange, label, options }) => {
 const DataTableFilter = ({
   rows,
   setFilteredData,
-  categoryOptions,
+  categoryOptions,stateOptions,
   nameOptions,statusOptions,
   initialFilters,
   filterKeys,
@@ -69,6 +69,9 @@ const DataTableFilter = ({
       const matchesFilter = Object.keys(filters).every((key) => {
         if (key === "category" && filters[key].length > 0) {
           return filters[key].includes(row.category.name);
+        }
+        if (key === "state" && filters[key].length > 0) {
+          return filters[key].includes(row.state);
         }
         if (key === "customer" && filters[key].length > 0) {
           return filters[key].includes(row.customer.name);
@@ -97,6 +100,7 @@ const DataTableFilter = ({
 
   const hasCategoryData = rows.some((row) => row.category);
   const hasCusData = rows.some((row) => row.customer);
+  const hasState = rows.some((row) => row.state);
   
   return (
     <Box m={2}>
@@ -130,6 +134,22 @@ const DataTableFilter = ({
                     }
                     label="Categories"
                     options={categoryOptions}
+                  />
+                </Grid>
+                )}
+                {hasState && (
+                <Grid item xs={12} sm={6} lg={3}>
+                  <Dropdown
+                    id="state"
+                    value={filters.state}
+                    onChange={(e) =>
+                      setFilters((prevFilters) => ({
+                        ...prevFilters,
+                        state: e.target.value,
+                      }))
+                    }
+                    label="State"
+                    options={stateOptions}
                   />
                 </Grid>
                 )}
@@ -170,6 +190,8 @@ const DataTableFilter = ({
                     ) : key === "customer" ? (
                     <p></p>
                     ) : key === "status" ? (
+                      <p></p>
+                    ) : key === "state" ? (
                       <p></p>
                     ) :
                     

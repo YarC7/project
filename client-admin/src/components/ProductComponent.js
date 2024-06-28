@@ -38,7 +38,9 @@ const Product = (props) =>{
   const categoryOptions = Array.from(
     new Set(products.filter((row) => !row.headers).map((row) => row.category.name))
   ).map((c) => ({ label: c, value: c }));
-
+  const stateOptions = Array.from(
+    new Set(products.filter((row) => !row.headers).map((row) => row.state))
+  ).map((c) => ({ label: c, value: c }));
   const handleChange = (event, value) => {
     setLoading(true); // Set loading to true before making the API request
     apiGetProducts(value);
@@ -156,11 +158,13 @@ const Product = (props) =>{
                 rows={products}
                 setFilteredData={setFilteredData}
                 categoryOptions={categoryOptions}
+                stateOptions={stateOptions}
                 initialFilters={{
                   name: "",
                   brand: "",
                   model: "",
                   category: [],
+                  state: [],
                 }}
                 filterKeys={["name", "brand", "model"]}
               />

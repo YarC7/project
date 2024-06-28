@@ -69,6 +69,32 @@ const ProductDAO = {
     }
     return products;
   },
+  async selectMost(status) {
+    try {
+      const approvedOrders = await Models.Order.find({ status: status }).select('items.product.name items.quantity');
+  
+      const productQuantities = approvedOrders.reduce((acc, order) => {
+        order.items.forEach(item => {
+          const productId = item.product.name;
+          const quantity = item.quantity;
+          if (acc[productId]) {
+            acc[productId] += quantity;
+          } else {
+            acc[productId] = quantity;
+          }
+        });
+        return acc;
+      }, {});
+      const result = Object.keys(productQuantities).map(productId => ({
+        _id: productId,
+        quantity: productQuantities[productId]
+      }));
+      return result;
+    } catch (err) {
+      console.error(err);
+    }
+  },
+  
   async selectByCatID(_cid) {
     const query = { "category._id": _cid };
     const products = await Models.Product.find(query).exec();

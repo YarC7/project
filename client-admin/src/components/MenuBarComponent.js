@@ -140,11 +140,11 @@ const MenuBar = () => {
                 }}
               >
                 <MenuItem onClick={handleClose}>
-                  <Button color="inherit" component={Link} to="/admin/category">
+                  <Button color="inherit" component={Link} to="/admin/demo">
                     Thống kê
                   </Button>
                 </MenuItem>
-                <MenuItem onClick={handleClose}>
+                {/* <MenuItem onClick={handleClose}>
                   <Button color="inherit" component={Link} to="/admin/product">
                     Báo cáo lịch sử mượn trả
                   </Button>
@@ -153,7 +153,7 @@ const MenuBar = () => {
                   <Button color="inherit" component={Link} to="/admin/user">
                     Báo cáo sử dụng thiết bị
                   </Button>
-                </MenuItem>
+                </MenuItem> */}
               </Menu>
               <Button color="inherit" component={Link} to="/admin/add-admin">
                 Tạo Admin

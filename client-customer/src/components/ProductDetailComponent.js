@@ -22,7 +22,8 @@ import withRouter from "../utils/withRouter";
 
 const ProductImage = styled(CardMedia)({
   height: 400,
-  width: 400,
+  width: 600,
+  margin : "auto",
 });
 
 class ProductDetail extends Component {
@@ -48,7 +49,7 @@ class ProductDetail extends Component {
     if (product != null) {
       // Render the UI once the product details have been fetched
       return (
-        <Box sx={{ mt: 4 }}>
+        <Box sx={{ m : 4 }}>
           <Typography variant="h4" align="center" sx={{ mb: 4 }}>
             PRODUCT DETAILS
           </Typography>
@@ -61,6 +62,14 @@ class ProductDetail extends Component {
                   alt={product.name}
                 />
               </Card>
+              <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                    Description
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {product.description}
+                  </Typography>
+                </CardContent>
             </Grid>
             <Grid item xs={12} md={6}>
               <CardContent>
@@ -75,8 +84,16 @@ class ProductDetail extends Component {
                       <TableCell>{product.name}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Price:</TableCell>
-                      <TableCell>{product.price} VNĐ</TableCell>
+                      <TableCell>Model:</TableCell>
+                      <TableCell>{product.model}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Brand:</TableCell>
+                      <TableCell>{product.brand}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Available:</TableCell>
+                      <TableCell>{product.state == 1 ? "Available" : product.state == 2 ? "In Use" : "Out of stock"}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Category:</TableCell>

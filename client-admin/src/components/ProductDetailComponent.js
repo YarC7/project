@@ -32,9 +32,6 @@ const ProductDetail = (props) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const clickAddBill = () => {
-    handleOpen();
-  };
 
   useEffect(() => {
     apiGetCategories();
@@ -107,7 +104,21 @@ const ProductDetail = (props) => {
     const price = parseInt(txtPrice);
     const category = cmbCategory;
     const image = imgProduct.replace(/^data:image\/[a-z]+;base64,/, "").trim(); // Trim base64 image data
-  
+    // const prod = {
+    //   name: name,
+    //   price: price,
+    //   category: category,
+    //   image: image,
+    //   brand: brand,
+    //   model: model,
+    //   quantity: quantity,
+    //   state: state,
+    //   year: year,
+    //   pdate: pdate,
+    //   warranty: warranty,
+    //   description: description,
+    // };
+    // console.log(prod);
     if (name && price && category && image && brand && model && quantity && state&& year && pdate && warranty && description) {
       const prod = {
         name: name,
@@ -123,6 +134,7 @@ const ProductDetail = (props) => {
         warranty: warranty,
         description: description,
       };
+      console.log(prod);
       apiPostProduct(prod);
     } else {
       alert("Please input all required fields");
@@ -344,17 +356,9 @@ const ProductDetail = (props) => {
           }}
           sx={{ mt: 2 }}
         />   
+        
         <TextField
-          width = "200px"
-          label="Description"
-          value={txtDescription}
-          onChange={(e) => {
-            setTxtDescription(e.target.value);
-          }}
-          sx={{ mt: 2 }}
-        />   
-        <TextField
-          width = "200px"
+          width = "400px"
           label="Price"
           value={txtPrice}
           onChange={(e) => {
@@ -362,7 +366,7 @@ const ProductDetail = (props) => {
           }}
           sx={{ mt: 2 }}
         />
-        <FormControl fullWidth sx={{ m: 2 }}>
+        <FormControl sx={{ m: 2 }}>
           <InputLabel>Category</InputLabel>
           <Select
             value={cmbCategory}
@@ -374,15 +378,18 @@ const ProductDetail = (props) => {
             {renderCategories}
           </Select>
         </FormControl>
-        <Box sx={{ m: 2 }}>
-          <Button
-            variant="outlined"
-            onClick={clickAddBill}
-            sx={{ mr: 2 }}
-          >
-            ADD Bill 
-          </Button>
-        </Box>
+        <TextField
+          multiline
+          rows={4}  
+          width = "500px"
+          id="outlined-multiline-static"
+          label="Description"
+          value={txtDescription}
+          onChange={(e) => {
+            setTxtDescription(e.target.value);
+          }}
+          sx={{ mt: 2 }}
+        />   
         <Box sx={{ m: 2 }}>
           <label htmlFor="file-upload">
             <img

@@ -68,7 +68,7 @@ function ListProduct(props) {
   };
 
   return (
-    <Box sx={{ flexGrow: 1, marginTop: 4 }}>
+    <Box sx={{ flexGrow: 1, m: 4 }}>
       <Typography variant="h4" align="center" sx={{ mb: 4 }}>
         LIST PRODUCTS
       </Typography>
@@ -77,14 +77,14 @@ function ListProduct(props) {
           <CircularProgress />
         </Box>
       ) : (
-        <Grid container spacing={2}>
+        <Grid container spacing={1}>
           {products.map((item) => (
             <Grid
               item
-              xs={12}
-              sm={6}
+              xs={6}
+              sm={4}
               md={4}
-              lg={3}
+              lg={2}
               key={item._id}
               sx={{ display: "flex" }}
             >
@@ -92,7 +92,7 @@ function ListProduct(props) {
                 <CardActionArea component={Link} to={"/product/" + item._id}>
                   <CardMedia
                     component="img"
-                    height="300"
+                    height="300"  
                     image={"data:image/jpg;base64," + item.image}
                     alt={item.name}
                   />

@@ -14,6 +14,7 @@ const OrderDAO = require("../models/OrderDAO");
 const ClassDAO = require("../models/ClassDAO");
 const UsedDAO = require("../models/UsedDAO");
 const PeriodDAO = require("../models/PeriodDAO");
+const Models = require("../models/Models");
 
 // customer
 router.post("/signup", async function (req, res) {
@@ -164,9 +165,28 @@ router.post("/checkout", JwtUtil.checkToken, async function (req, res) {
     items: items,
     used : res1
   };
- 
-  const result = await OrderDAO.insert(order);
-  res.json(result);
+  try {
+    for (let item of items) {
+      product = await Models.Product.findById(item.product._id);
+      if (item.quantity > product.quantity) {
+        throw new Error(`Requested quantity for product ${product.name} exceeds available stock`);
+      }
+    }
+    const result = await OrderDAO.insert(order);
+    for (let item of items) {
+      await Models.Product.updateOne(
+        { _id: item.product._id },
+        {
+          $set: { state: 2 },
+          $inc: { quantity: -item.quantity }
+        }
+      );
+    }
+    res.json(result);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+  
 });
 // myorders
 router.get(

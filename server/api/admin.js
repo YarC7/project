@@ -469,7 +469,6 @@ router.get("/devices/sum", JwtUtil.checkToken, async function (req, res) {
   const number = await ProductDAO.sumProductbyQuantity();
 
   const result = { number: number, state1: state1, state2: state2 , state3: state3,};
-
   res.json(result);
 });
 
@@ -491,6 +490,14 @@ router.get("/products/search/:keyword", async function (req, res) {
   const keyword = req.params.keyword;
   const products = await ProductDAO.selectByKeyword(keyword);
   res.json(products);
+});
+
+router.get("/products/most", async function (req, res) {
+  const products = await ProductDAO.selectMost("APPROVED");
+  const products2 = await ProductDAO.selectMost("CANCELED");
+  const result = { products: products, products2: products2};
+  res.json(result);
+
 });
 router.post("/products", JwtUtil.checkToken, async function (req, res) {
   const name = req.body.name;
@@ -592,9 +599,9 @@ router.get(
 );
 router.get("/orders/sum", JwtUtil.checkToken, async function (req, res) {
   const state1 = await OrderDAO.sumOrderbyState("APPROVED");
-  const state2 = await OrderDAO.sumOrderbyState("PENDING");
-  const state3 = await OrderDAO.sumOrderbyState("CANCELED");
-  const result = { state1: state1, state2: state2 , state3: state3,};
+  const state2 = await OrderDAO.sumOrderbyState("CANCELED");
+  const state3 = await OrderDAO.sumOrderbyState("PENDING");
+  const result = { state1: state1,state2: state2,state3: state3};
   res.json(result);
 });
 router.get("/orders/hot", async function (req, res) {
